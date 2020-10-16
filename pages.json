@@ -1,0 +1,330 @@
+{
+	"pages": [{
+			"path": "pages/public/accountExec/accountExec",
+			"style": {
+				"navigationBarTitleText": "微信登录",
+				"navigationBarBackgroundColor": "#0055ff"
+			}
+		},
+		{
+			"path": "pages/public/home/home",
+			"style": {
+				"navigationBarTitleText": "菜单",
+				"navigationBarBackgroundColor": "#0055ff"
+			}
+		},
+		{
+			"path": "pages/specific/home/home",
+			"style": {
+				"navigationBarTitleText": "问卷调查"
+			}
+		},
+		{
+			"path": "pages/specific/questionnaire/questionnaire",
+			"style": {
+				"navigationBarTitleText": "问卷",
+				"navigationBarBackgroundColor": "#0055ff"
+			}
+		},
+		{
+			"path": "pages/public/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		},
+		{
+			"path": "pages/public/login/forget",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		},
+		{
+			"path": "pages/public/login/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/public/list/list",
+			"style": {}
+		}, {
+			"path": "pages/public/formPage/formPage",
+			"style": {}
+		}, {
+			"path": "pages/public/add/add",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/activityUpdate/activityUpdate",
+			"style": {
+				"navigationBarTitleText": "问卷编辑",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		},
+		{
+			"path": "pages/specific/added/added",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/viewRecord/viewRecord",
+			"style": {}
+		}, {
+			"path": "pages/specific/assessmentResult/assessmentResult",
+			"style": {
+				"navigationBarTitleText": "评估",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/article/article",
+			"style": {}
+		}, {
+			"path": "pages/public/index/index",
+			"style": {
+				"navigationBarTitleText": "百想科技",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/symptom/symptom",
+			"style": {}
+		}, {
+			"path": "pages/specific/illnessContrast/illnessContrast",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/courseGrid/courseGrid",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/newsList/newsList",
+			"style": {}
+		}, {
+			"path": "pages/public/proc/procList/procList",
+			"style": {}
+		}, {
+			"path": "pages/public/proc/procDetail/procDetail",
+			"style": {}
+		}, {
+			"path": "pages/public/proc/apply/apply",
+			"style": {}
+		}, {
+			"path": "pages/public/proc/procStepDetail/procStepDetail",
+			"style": {}
+		}, {
+			"path": "pages/public/proc/recordDetail/recordDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/guide/guide",
+			"style": {
+				"navigationBarTitleText": "导航",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/mapMarks/mapMarks",
+			"style": {}
+		}, {
+			"path": "pages/specific/mapMarks/mapDetail/mapDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/mapMarks/mapList/mapList",
+			"style": {}
+		}, {
+			"path": "pages/specific/3dMap/3dMap",
+			"style": {}
+		}, {
+			"path": "pages/public/homePage/homePage",
+			"style": {}
+		}, {
+			"path": "pages/specific/questionnaire/questionnaireAnalysis/questionnaireAnalysis",
+			"style": {
+				"navigationBarTitleText": "问卷分析",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/questionnaire/quiz/quiz",
+			"style": {
+				"navigationBarTitleText": "答题",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		},
+		{
+			"path": "pages/specific/health/symptomSelect/symptomSelect",
+			"style": {
+				"navigationBarTitleText": "症状选择"
+			}
+		},
+		{
+			"path": "pages/specific/health/symptomSelect/symptomSelect2",
+			"style": {
+				"navigationBarTitleText": "症状选择"
+			}
+		},
+		{
+			"path": "pages/specific/health/symptomSelect/symptomSelect3",
+			"style": {
+				"navigationBarTitleText": "症状选择"
+			}
+		},
+		{
+			"path": "pages/public/demo/demo",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/home/home",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/balancedDiet/balancedDiet",
+			"style": {
+				"navigationBarTitleText": "均衡饮食",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/health/balancedDiet/balancedDietDetail",
+			"style": {
+				"navigationBarTitleText": "均衡饮食",
+				"navigationBarBackgroundColor": "#0bc99d"
+			}
+		}, {
+			"path": "pages/specific/health/foodSelect/foodSelect",
+			"style": {}
+		}, {
+			"path": "pages/public/identityCardRec/identityCardRec",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/record/record",
+			"style": {}
+		}, 
+		// {
+		// 	"path": "pages/specific/health/relation/relation",
+		// 	"style": {}
+		// }, 
+		{
+			"path": "pages/specific/health/sportDetail/sportDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/dietSelect/dietSelect",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/overview/overview",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/articleList/articleList",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/articleDetail/articleDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/article/article",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/articleList/nav-tab/nav-tab",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/failpage/failpage",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/healthQuestionnaire/healthQuestionnaire",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/indicatorsDetails/dietDetail/dietDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/healthNav/healthNav",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/mineSelf/mineSelf",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/indicatorsDetails/dietUp/dietUp",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/index/index",
+			"style": {}
+		},
+		{
+			"path": "pages/specific/health/tool/toolOne/toolOne",
+			"style": {
+				"navigationBarTitleText": "卡路里计算"
+			}
+		},
+		{
+			"path": "pages/specific/health/tool/toolTwo/toolTwo",
+			"style": {
+				"navigationBarTitleText": "BMI计算"
+			}
+		},
+		{
+			"path": "pages/specific/health/tool/toolThree/toolThree",
+			"style": {
+				"navigationBarTitleText": "婴儿发育查询"
+			}
+		},
+		{
+			"path": "pages/specific/health/tool/toolFour/toolFour",
+			"style": {
+				"navigationBarTitleText": "食品查询"
+			}
+		},
+		{
+			"path": "pages/specific/health/tool/toolFive/toolFive",
+			"style": {
+				"navigationBarTitleText": "营养素介绍"
+			}
+		},
+		{
+			"path": "pages/specific/health/tool/toolSix/toolSix",
+			"style": {
+				"navigationBarTitleText": "运动查询"
+			}
+		}, {
+			"path": "pages/specific/health/foodDetail/foodDetail",
+			"style": {
+				"navigationBarTitleText": "食物详情"
+			}
+		}, {
+			"path": "pages/specific/health/sportsDetail/sportsDetail",
+			"style": {
+				"navigationBarTitleText": "运动详情"
+			}
+		}, {
+			"path": "pages/specific/health/otherIndicator/otherIndicator",
+			"style": {
+				"navigationBarTitleText": "身体指标"
+			}
+		}, {
+			"path": "pages/specific/health/personalDetail/personalDetail",
+			"style": {
+				"navigationBarTitleText": "身体指标"
+			}
+		}, {
+			"path": "pages/specific/health/nutrientRatio/nutrientRatio",
+			"style": {
+				"navigationBarTitleText": "营养素占比"
+			}
+		}
+	    ,{
+            "path" : "pages/specific/elementDetail/elementDetail",
+            "style" : {}
+        },{
+            "path" : "pages/specific/health/shop/shopHome",
+            "style" : {"navigationBarTitleText": "商铺首页"}
+        },{
+            "path" : "pages/specific/health/shop/shopDetail",
+            "style" : {"navigationBarTitleText": "商铺详情"}
+        }
+    ],
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#1abc9c",
+		"backgroundColor": "#F8F8F8"
+	}
+}

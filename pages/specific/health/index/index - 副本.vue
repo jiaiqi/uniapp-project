@@ -1,0 +1,332 @@
+<template>
+	<view class="index-wrap">
+		<view class="main-content main-content-t">
+			<view class="energy-item ">
+				<view class="number">{{ parseFloat(dietIn).toFixed(1) }}</view>
+				<view class="text">摄入</view>
+			</view>
+			<view class="operate">-</view>
+			<view class="energy-item">
+				<view class="number">{{ parseFloat(sportOut).toFixed(1) }}</view>
+				<view class="text">运动</view>
+			</view>
+			<view class="operate">-</view>
+			<view class="energy-item">
+				<view class="number">{{ basicOut ? parseFloat(basicOut).toFixed(1) : '0' }}</view>
+				<view class="text">基础代谢</view>
+			</view>
+			<view class="operate">=</view>
+			<view class="energy-item">
+				<view class="number text-red" style="display: flex; width: 90px; justify-content: space-between;">
+					<text style="width: 60%;">{{ parseFloat(energyChange) > 0 ? `+${parseFloat(energyChange).toFixed(1)}` : parseFloat(energyChange).toFixed(1) }}</text>
+					<text class="units">大卡</text>
+				</view>
+				<view class="number text-red" style="display: flex; width: 90px; justify-content: space-between;">
+					<text style="width: 60%;">
+						{{ energyChange === 0 ? '0.0' : parseFloat(energyChange / 7.7) > 0 ? `+${parseFloat(energyChange / 7.7).toFixed(1)}` : parseFloat(energyChange / 7.7).toFixed(1) }}
+					</text>
+					<text class="units">g脂肪</text>
+				</view>
+				<view class="text">体重变化</view>
+			</view>
+		</view>
+		<view class="main-content card">
+			<view class="left">
+				<view class="title">饮食</view>
+				<view class="subtitle">今日摄入</view>
+				<view class="data">
+					<view class="num text-orange">{{ dietIn.toFixed(1) }}</view>
+					<view class="unit text-bold">大卡</view>
+				</view>
+			</view>
+			<view class="right"><canvas canvas-id="canvasRingFood" id="canvasRingFood" class="charts" @touchstart="touchRingDiet"></canvas></view>
+		</view>
+		<view class="main-content card">
+			<view class="left">
+				<view class="title">运动</view>
+				<view class="subtitle">今日消耗</view>
+				<view class="data">
+					<view class="num text-green">{{ sportOut.toFixed(1) }}</view>
+					<view class="unit text-bold">大卡</view>
+				</view>
+			</view>
+			<view class="right"><canvas canvas-id="canvasRingSport" id="canvasRingSport" class="charts" @touchstart="touchRingSport"></canvas></view>
+		</view>
+		<view class="half-content">
+			<!-- <view class="half-width"><view class="title" @click="toPages('zz')">健康追踪</view></view> -->
+			<view class="half-width"><view class="title" @click="toPages('sj')">健康数据</view></view>
+			<view class="half-width"><view class="title" @click="toPages('pc')">健康评测</view></view>
+			<view class="half-width"><view class="title" @click="toPages('sc')">慢病筛查</view></view>
+			<view class="half-width"><view class="title" @click="toPages('gj')">小工具</view></view>
+		</view>
+	</view>
+</template>
+
+<script>
+import uCharts from '@/components/u-charts/u-charts.js';
+var _self;
+var canvaRingSport = null;
+var canvaRingDiet = null;
+export default {
+	data() {
+		return {
+			cWidth: '',
+			cHeight: '',
+			pixelRatio: 1,
+			sportChartData: {
+				series: [
+					{
+						name: '无氧',
+						data: 20
+					},
+					{
+						name: '有氧',
+						data: 40
+					}
+				]
+			},
+			dietChartData: {
+				series: [
+					{
+						name: '蛋白质',
+						data: 50
+					},
+					{
+						name: '脂肪',
+						data: 30
+					},
+					{
+						name: '碳水',
+						data: 20
+					}
+				]
+			}
+		};
+	},
+	methods: {
+		toPages(e) {
+			this.$emit('toPages', e);
+		},
+		showRing(canvasId, chartData, type) {
+			let canvas = new uCharts({
+				$this: _self,
+				canvasId: canvasId,
+				type: 'ring',
+				fontSize: 11,
+				legend: {
+					show: true,
+					position: 'bottom'
+				},
+				extra: {
+					pie: {
+						offsetAngle: -45,
+						ringWidth: 10 * _self.pixelRatio,
+						labelWidth: 5
+					}
+				},
+				background: '#FFFFFF',
+				pixelRatio: _self.pixelRatio,
+				series: chartData.series,
+				animation: true,
+				width: _self.cWidth * _self.pixelRatio,
+				height: _self.cHeight * _self.pixelRatio,
+				disablePieStroke: true,
+				dataLabel: true
+			});
+			if (type === 'sport') {
+				canvaRingSport = canvas;
+			} else {
+				canvaRingDiet = canvas;
+			}
+		},
+		touchRingSport(e) {
+			canvaRingSport.showToolTip(e, {
+				format: function(item) {
+					return item.name + ':' + item.data;
+				}
+			});
+		},
+		touchRingDiet(e) {
+			canvaRingDiet.showToolTip(e, {
+				format: function(item) {
+					return item.name + ':' + item.data;
+				}
+			});
+		}
+	},
+	props: {
+		dietIn: {
+			// 饮食摄入
+			type: Number,
+			default: 0
+		},
+		sportOut: {
+			// 运动消耗
+			type: Number,
+			default: 0
+		},
+		basicOut: {
+			// 基础代谢
+			type: Number,
+			default: 0
+		},
+		dietRecord: {
+			// 运动记录
+			type: Array,
+			default: () => []
+		},
+		userInfo: {
+			//当前用户信息
+			type: Object,
+			default: () => {}
+		}
+	},
+	computed: {
+		energyChange() {
+			return Number(this.dietIn) - Number(this.sportOut) - Number(this.basicOut);
+		},
+		age() {
+			if (this.userInfo.birthday) {
+				let age = new Date().getFullYear() - new Date(this.userInfo.birthday).getFullYear();
+				return age;
+			}
+		}
+	},
+	mounted() {
+		_self = this;
+		this.cWidth = uni.upx2px(420);
+		this.cHeight = uni.upx2px(300);
+		this.showRing('canvasRingFood', this.dietChartData, 'diet');
+		this.showRing('canvasRingSport', this.sportChartData, 'sport');
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.index-wrap {
+	background-color: #f1f1f1;
+	width: 100vw;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding-bottom: 30rpx;
+	height: calc(100vh - 180rpx);
+	overflow: scroll;
+	.main-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 150rpx;
+		background-color: #fff;
+		border-radius: 20upx;
+		box-sizing: border-box;
+		// padding: 0 20rpx;
+		width: calc(100% - 40rpx);
+		margin-top: 20rpx;
+		&.main-content-t {
+			padding: 0 20rpx;
+			// margin: 20rpx;
+		}
+		.energy-item {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			.text {
+				font-size: 20rpx;
+				line-height: 50rpx;
+				text-align: center;
+			}
+			.number {
+				font-size: 30upx;
+				text-align: center;
+			}
+			.text-red {
+				color: #red;
+			}
+			.units {
+				padding-left: 10upx;
+				font-size: 20upx;
+				color: #000;
+			}
+		}
+		.operate {
+			font-size: 60upx;
+			font-weight: 600;
+			width: 60upx;
+			text-align: center;
+		}
+		&.card {
+			.left {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				padding: 20rpx 0 0rpx 20rpx;
+				.title {
+					font-size: 20rpx;
+					font-weight: 800;
+					line-height: 70rpx;
+				}
+				.subtitle {
+					color: #666;
+					line-height: 80rpx;
+				}
+				.data {
+					display: flex;
+					min-height: 100rpx;
+					// padding: 0 0 20rpx;
+					flex-direction: column;
+					.num {
+						font-size: 80rpx;
+						font-weight: bold;
+					}
+					.unit {
+						display: flex;
+						align-items: flex-end;
+						line-height: 70rpx;
+						padding-left: 10rpx;
+					}
+				}
+			}
+			.right {
+				flex: 1;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				.charts {
+					width: 400rpx;
+					height: 300upx;
+					background-color: #ffffff;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+			}
+		}
+	}
+	.half-content {
+		width: calc(100% - 40rpx);
+		display: flex;
+		// justify-content: space-between;
+		flex-wrap: wrap;
+		.half-width {
+			margin-top: 20rpx;
+			min-height: 100rpx;
+			margin-right: 20rpx;
+			width: calc((100% - 40rpx) / 3);
+			background-color: #fff;
+			border-radius: 20rpx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: rgba($color: #1890ff, $alpha: 0.8);
+			color: #fff;
+			font-size: 30rpx;
+			letter-spacing: 5rpx;
+			&:nth-child(3),
+			&:nth-child(6) {
+				margin-right: 0;
+			}
+		}
+	}
+}
+</style>
