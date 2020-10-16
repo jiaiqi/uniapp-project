@@ -8,8 +8,8 @@
 				<view class="desc" style="text-align: justify;">
 					<view class="text-content-text text-black"><view v-html="JSON.parse(JSON.stringify(formData.remark).replace(/\<img/gi, '<img width=100%  '))"></view></view>
 					<view style="margin-top: .5rem;">
-						<view class="text-blue" v-if="formData.start_time">开始时间：{{ formData.start_time.slice(0, 10) }}</view>
-						<view class="text-blue" v-if="formData.end_time">结束时间：{{ formData.end_time.slice(0, 10) }}</view>
+						<view class="text-blue" v-if="formData.start_time">开始时间：{{ formData.start_time.slice(0, 16) }}</view>
+						<view class="text-blue" v-if="formData.end_time">结束时间：{{ formData.end_time.slice(0, 16) }}</view>
 					</view>
 				</view>
 			</view>
@@ -743,7 +743,7 @@ export default {
 		}
 	},
 	beforeDestroy() {
-		uni.clearStorageSync('fill_batch_no');
+		uni.setStorageSync('fill_batch_no','')
 	},
 	onLoad(option) {
 		if (option.formType && option.formType === 'detail') {
