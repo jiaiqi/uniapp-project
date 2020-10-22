@@ -323,7 +323,17 @@
 		<view class="cu-modal bottom-modal" :class="{ show: showRichText }">
 			<view class="cu-dialog  rich-text">
 				<bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor>
-				<view class="dialog-button"><view class="cu-btn bg-blue shadow" @tap="showRichText = false">确定</view></view>
+				<view class="dialog-button">
+					<view
+						class="cu-btn bg-blue shadow"
+						@tap="
+							showRichText = false;
+							getValid();
+						"
+					>
+						确定
+					</view>
+				</view>
 			</view>
 		</view>
 		<uni-popup ref="popup" type="bottom" @change="changePopup">
@@ -830,6 +840,9 @@ export default {
 				// this.listModel = listItemModel
 				// return this.listModel
 			} else {
+				// if ((this.fieldData.value === null || this.fieldData.value === undefined) && this.fieldData.col_type === 'Enum' && this.fieldData.defaultValue) {
+				// 	this.fieldData.value = this.fieldData.defaultValue;
+				// }
 				Object.keys(this.fieldsModel).forEach(key => {
 					if (this.fieldData.column === key && !this.fieldData.value && this.fieldsModel[key]) {
 						this.fieldData.value = this.fieldsModel[key];

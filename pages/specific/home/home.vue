@@ -1,14 +1,7 @@
 <template>
 	<view class="container999" @touchstart="refreshStart" @touchmove="refreshMove" @touchend="refreshEnd">
-		<!-- 刷新组件需搭配scroll-view使用，并在pages.json中添加 "disableScroll":true-->
 		<refresh ref="refresh" @isRefresh="isRefresh"></refresh>
-		<!-- <cu-custom bgColor="bg-gradual-pink" :isBack="false"><block slot="content">首页</block></cu-custom> -->
-		<view class="nav">
-			<!-- #ifdef H5 -->
-			<!-- <view style="height: 45px;width: 100%;">边距盒子</view> -->
-			<!-- #endif -->
-			<navTab ref="navTab" :tabTitle="tabTitle" @changeTab="changeTab"></navTab>
-		</view>
+		<view class="nav"><navTab ref="navTab" :tabTitle="tabTitle" @changeTab="changeTab"></navTab></view>
 		<!-- swiper切换 swiper-item表示一页 scroll-view表示滚动视窗 -->
 		<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 			<swiper-item v-for="(listItem, listIndex) in list" :key="listIndex">
@@ -108,15 +101,19 @@ export default {
 		console.log(user);
 		this.currentLoginUser = user.data.user_no;
 		uni.hideNavigationBarLoading();
+		this.$nextTick(function() {
+			this.getList(0);
+		});
 	},
 	onShow() {
-		let isWeixinClient = this.isWeixinClient();
-		if (isWeixinClient) {
-			this.getSignature();
-		}
-		this.getList(this.currentTab);
+		// #ifdef H5
+		// let isWeixinClient = this.isWeixinClient();
+		// this.getSignature();
+		this.$nextTick(function() {
+			this.getList(this.currentTab);
+		});
+		// #endif
 	},
-	onHide() {},
 	methods: {
 		toActivityUpdata(e) {
 			uni.navigateTo({
@@ -292,7 +289,7 @@ export default {
 				return questList;
 			}
 		},
-		changeTab(index) {
+		changeTab(index = 0) {
 			this.pageInfo = {
 				pageNo: 1,
 				rownumber: 10,
@@ -370,7 +367,101 @@ export default {
 				});
 				this.$refs.refresh.endAfter(); //刷新结束调用
 			}, 1000);
-		}
+		},
+		getSignature(formData) {
+			let self = this;
+			let linkurl = '';
+			// #ifdef H5
+			window.location.href.split('#')[0];
+			// #endif
+			let req = {
+				serviceName: 'srvwx_app_signature_select',
+				colNames: ['*'],
+				condition: [
+					{
+						colName: 'app_no',
+						ruleType: 'eq',
+						value: this.$api.appNo.wxmp
+						// value: this.$api.appNo.wxh5
+					},
+					{
+						colName: 'page_url',
+						ruleType: 'eq',
+						value: linkurl
+					}
+				]
+			};
+			console.log('linkurl', linkurl);
+			uni.setStorageSync('linkUrl', null);
+			self.$http.post(self.$api.getSignature, req).then(res => {
+				if (res.data.state === 'SUCCESS') {
+					let resData = res.data.data[0];
+					uni.setStorageSync('signatureInfo', resData);
+					// #ifdef H5
+					self.$wx.config({
+						debug: false, // 调试阶段建议开启
+						appId: resData.appId, // APPID
+						timestamp: resData.timestamp, // 时间戳timestamp
+						nonceStr: resData.noncestr, // 随机数nonceStr
+						signature: resData.signature, // 签名signature
+						// 需要调用的方法接口
+						jsApiList: [
+							'updateAppMessageShareData',
+							'updateTimelineShareData',
+							'onMenuShareTimeline',
+							'onMenuShareAppMessage',
+							'onMenuShareWeibo',
+							'onMenuShareQQ',
+							'onMenuShareQZone'
+						]
+					});
+					self.$wx.ready(() => {
+						console.log('wx.ready()', self.wxUserInfo);
+						self.$wx.updateAppMessageShareData({
+							//自定义“分享给朋友”及“分享到QQ”按钮的分享内容
+							imgUrl: self.wxUserInfo.headimgurl, // 分享图，默认当相对路径处理，所以使用绝对路径的的话，“http://”协议前缀必须在。
+							desc: '百想健康', // 摘要,如果分享到朋友圈的话，不显示摘要。
+							title: '百想健康', // 分享卡片标题
+							// link:  window.location.href, // 分享出去后的链接，这里可以将链接设置为另一个页面。
+							link: linkurl, // 分享出去后的链接，这里可以将链接设置为另一个页面。
+							success: function() {
+								// 分享成功后的回调函数
+							},
+							cancel: function() {
+								// 用户取消分享后执行的回调函数
+								// //// alert('分享失败')
+							}
+						}); // 自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容
+						self.$wx.updateTimelineShareData({
+							imgUrl: self.formData.fileUrl, // 分享图，默认当相对路径处理，所以使用绝对路径的的话，“http://”协议前缀必须在。
+							desc: '百想健康', // 摘要,如果分享到朋友圈的话，不显示摘要。
+							title: '百想健康', // 分享卡片标题
+							link: linkurl, // 分享出去后的链接，这里可以将链接设置为另一个页面。
+							success: function() {
+								// 分享成功后的回调函数
+							},
+							cancel: function() {
+								// 用户取消分享后执行的回调函数
+								// //// alert('分享失败')
+							}
+						});
+					});
+					self.$wx.error(function(res) {
+						uni.showModal({
+							title: '提示',
+							content: JSON.stringify(res),
+							success() {}
+						});
+					});
+					// #endif
+				} else {
+					uni.showToast({
+						title: '获取签名失败',
+						icon: 'none'
+					});
+				}
+			});
+		},
 	}
 };
 </script>

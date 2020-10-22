@@ -213,7 +213,6 @@
 				var imageIndex = e.currentTarget.dataset.index
 				var deletedImagePath = _self.imageListData[imageIndex]
 				_self.imageListData.splice(imageIndex, 1) 
-				debugger
 				//检查删除图片的服务器地址是否设置，如果设置则调用API，在服务器端删除该图片
 				console.log(imageIndex,_self.imageListData,deletedImagePath)
 				let fileUrl = deletedImagePath.substring(deletedImagePath.lastIndexOf('filePath=') + 9,deletedImagePath.length)

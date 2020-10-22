@@ -1106,7 +1106,6 @@ export default {
 			];
 			let recordType = await this.getFoodType(cond);
 			let ele = null;
-			debugger;
 			if (this.currentRecordType === 'sport') {
 				serviceName = 'srvhealth_body_activity_record_update';
 				recordType = await this.getSportType(cond);
@@ -1158,7 +1157,6 @@ export default {
 							serviceName = 'srvhealth_body_activity_record_delete';
 							url = self.getServiceUrl('health', 'srvhealth_body_activity_record_delete', 'operate');
 						}
-						debugger;
 						let req = [{ serviceName: serviceName, condition: [{ colName: 'id', ruleType: 'in', value: item.id }] }];
 						self.$http.post(url, req).then(res => {
 							uni.hideLoading();
@@ -1512,7 +1510,6 @@ export default {
 										for (let a in fod) {
 											if (mat.key && mat.key == a) {
 												// if (mat.name === '蛋白') {
-												// 	debugger
 												// 	mat.UL = this.userInfo.weight * mat.UL;
 												// 	mat.EAR = this.userInfo.weight * mat.EAR;
 												// }

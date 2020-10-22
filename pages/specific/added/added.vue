@@ -53,8 +53,8 @@ export default {
 		}
 	},
 	methods: {
-		valueChange(e,i) {
-			this.formData[e.column] = i[e.column]
+		valueChange(e, i) {
+			this.formData[e.column] = i[e.column];
 			this.fields = this.getShowFields(this.formData);
 		},
 		async getActivityInfo(e) {
@@ -153,7 +153,7 @@ export default {
 			switch (type) {
 				case 'update':
 					fields = this.setFieldsDefaultVal(colVs._fieldInfo, this.activityData);
-					this.formData = this.activityData
+					this.formData = this.activityData;
 					break;
 				case 'add':
 					fields = colVs._fieldInfo;
@@ -176,7 +176,7 @@ export default {
 						return item;
 					}
 				});
-				this.allFields = fields
+				this.allFields = fields;
 				this.fields = this.getShowFields(this.formData);
 			}
 		},
@@ -191,7 +191,7 @@ export default {
 			// 		return item
 			// 	})
 			// }
-			let allFields = this.allFields
+			let allFields = this.allFields;
 			allFields = allFields.filter(field => {
 				if (field._colDatas.x_if) {
 					let isShow = eval('(' + field._colDatas.x_if + ')');

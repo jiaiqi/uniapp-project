@@ -439,7 +439,6 @@ export default {
 											) {
 												let newObj = row['newRowDataList'][colIndex] ? row['newRowDataList'][colIndex] : {};
 												if (row.user_no === 'zhangj') {
-													// debugger
 													console.log(newObj, row, col, colIndex);
 												}
 												schedule.scheduleConfig = scheduleList.config;

@@ -6548,14 +6548,6 @@
     ], function( FlashRuntime ) {
     
         return FlashRuntime.register( 'Image', {
-            // init: function( options ) {
-            //     var owner = this.owner;
-    
-            //     this.flashExec( 'Image', 'init', options );
-            //     owner.on( 'load', function() {
-            //         debugger;
-            //     });
-            // },
     
             loadFromBlob: function( blob ) {
                 var owner = this.owner;

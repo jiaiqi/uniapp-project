@@ -179,8 +179,8 @@ export default {
 				fieldInfo.seq = item.seq
 				if (item.init_expr) {
 					item.init_expr = item.init_expr.replace(/\'/g, '')
+					fieldInfo.defaultValue = item.init_expr
 				}
-				fieldInfo.defaultValue = item.init_expr
 				fieldInfo.option_list_v2 = item.option_list_v2
 				fieldInfo.col_type = item.col_type
 				fieldInfo.section = item.section

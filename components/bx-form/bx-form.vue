@@ -164,6 +164,12 @@ export default {
 	},
 	created() {
 		if (this.fields.length > 0) {
+			this.fields = this.fields.map(item => {
+				if (!item.value && item.defaultValue) {
+					item.value = item.defaultValue;
+				}
+				return item
+			});
 			this.oldField = this.deepClone(this.fields);
 			this.oldField.forEach((item, index) => {
 				this.oldFieldModel[item.column] = item.value;
@@ -339,13 +345,14 @@ export default {
 					let item = this.fieldModel;
 					if (itemData.hasOwnProperty('isShowExp') && item.hasOwnProperty(itemData.column)) {
 						itemData['showExp'] = this.evalInTo(itemData, item);
-						itemData['display'] = itemData.isShowExp && itemData.isShowExp.length > 0 ? this.colItemShowExps(itemData, item)&&itemData.display : itemData.display === false ? false : true;
+						itemData['display'] =
+							itemData.isShowExp && itemData.isShowExp.length > 0 ? this.colItemShowExps(itemData, item) && itemData.display : itemData.display === false ? false : true;
 					} else {
 						itemData['showExp'] = itemData['showExp'] || true;
 					}
 					if (itemData.formulaShow) {
 						itemData['showExp'] = evaluatorTo(item, itemData.formulaShow);
-						itemData['display'] = itemData['showExp']
+						itemData['display'] = itemData['showExp'];
 					}
 					itemData.valid = {
 						column: itemData.column,
@@ -373,7 +380,7 @@ export default {
 				this.fieldModel[e.column] = e.value;
 			}
 			e.value = this.fieldModel[e.column];
-			const fieldModel = this.deepClone(this.fieldModel)
+			const fieldModel = this.deepClone(this.fieldModel);
 			this.allField = this.allField.map((item, index) => {
 				item.display = item.isShowExp && item.isShowExp.length > 0 ? this.colItemShowExps(item, this.fieldModel) : item.display === false ? false : true;
 				if (item.column === e.column) {
@@ -433,23 +440,23 @@ export default {
 				});
 			}
 			console.log('valueChange', e, this.fieldModel[e.column], this.fieldModel);
-			this.$emit('value-blur', e,this.fieldModel);
+			this.$emit('value-blur', e, this.fieldModel);
 		},
 		onValBlur(e) {
 			console.log('e', e, this.fieldModel, this.fieldModel[e.column]);
 			this.fieldModel[e.column] = e.value;
-			this.$emit('value-blur', e,this.fieldModel);
+			this.$emit('value-blur', e, this.fieldModel);
 		},
 		getDetailfieldModel() {
 			return this.fieldModel;
 		},
 		getFieldModel() {
-			console.log(this.fieldModel,'getFieldModel');
+			console.log(this.fieldModel, 'getFieldModel');
 			let valid = 0;
 			let showsNum = 0;
 			this.allField.map((item, index) => {
 				let valids = this.$refs.fitem[index].getValid();
-				console.log('字段校验', valids,item);
+				console.log('字段校验', valids, item);
 				if (item.display) {
 					showsNum++;
 					if (valids.valid) {
@@ -507,8 +514,8 @@ export default {
 				this.$emit('get-cascader-val');
 			}
 		},
-		showOptionlist(e){
-			this.$emit('show-option-list',e)
+		showOptionlist(e) {
+			this.$emit('show-option-list', e);
 		},
 		onReset() {
 			this.allField = this.deepClone(this.oldField);

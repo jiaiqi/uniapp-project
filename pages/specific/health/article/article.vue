@@ -105,7 +105,6 @@ export default {
 	methods: {
 		clickListItem(e) {
 			console.log(e);
-			// debugger
 			uni.navigateTo({
 				url: '/pages/specific/health/articleDetail/articleDetail?content_no=' + e.content_no
 			});

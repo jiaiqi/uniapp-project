@@ -793,7 +793,6 @@ export default {
 			this.dateFormat = 'hh:ii:ss';
 		},
 		confirm(e) {
-			// debugger
 			if (e === 'confirm') {
 				console.log(this.formData);
 				let formData = this.formData;

@@ -284,9 +284,6 @@ export default {
 					let obj = null;
 					res.data.data.map(food => {
 						if (food.name === item.name) {
-							// if(food.name==='海带'){
-							// 	debugger
-							// 	}
 							obj = Object.assign(food, item);
 						}
 					});
