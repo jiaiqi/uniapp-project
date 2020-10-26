@@ -217,6 +217,7 @@ export default {
         .label {
           border: none;
           background-color: #efefef;
+					color: #333;
           border-radius: 5px;
         }
       }

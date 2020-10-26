@@ -580,8 +580,12 @@ export default {
 				"is_public": "否",
 				"show_cfg": "",
 				points: e.points,
-				option_img_explain: e.option_img_explain
-				// "option_data":[]
+				option_img_explain: e.option_img_explain,
+				ref_type: e.ref_type,
+				srv_app: e.srv_app,
+				serviceName: e.serviceName,
+				refed_col: e.refed_col,
+				key_disp_col: e.key_disp_col,
 			}
 			switch (e.item_type) {
 				case "文本":
@@ -603,6 +607,16 @@ export default {
 					break;
 				case "图片":
 					cnCol.item_type_attr['fileNum'] = e.max_num
+					break;
+				case "地址":
+					break;
+				case "引用":
+					cnCol.item_type_attr['ref_type'] = e.ref_type
+					cnCol.item_type_attr['srv_app'] = e.srv_app
+					cnCol.item_type_attr['serviceName'] = e.serviceName
+					cnCol.item_type_attr['refed_col'] = e.refed_col
+					cnCol.item_type_attr['key_disp_col'] = e.key_disp_col
+					cnCol.item_type_attr['option_list_v2'] = e.option_list_v2
 					break;
 				default:
 					''
@@ -763,6 +777,7 @@ export default {
 								isShowNum++
 							}
 						} else if (item.ruleType === 'neq') {
+
 							if (obj[item.colName] !== item.value) {
 								isShowNum++
 							}

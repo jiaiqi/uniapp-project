@@ -168,7 +168,7 @@ export default {
 				if (!item.value && item.defaultValue) {
 					item.value = item.defaultValue;
 				}
-				return item
+				return item;
 			});
 			this.oldField = this.deepClone(this.fields);
 			this.oldField.forEach((item, index) => {
@@ -343,6 +343,27 @@ export default {
 				this.allField = fields.map((itemData, index) => {
 					this.fieldModel[itemData.column] = itemData.value;
 					let item = this.fieldModel;
+					if (itemData.hasOwnProperty('option_list_v2')) {
+						if (itemData.option_list_v2&&
+							typeof itemData.option_list_v2.srv_app_exp === 'object' &&
+							itemData.option_list_v2.srv_app_exp.type === 'column' &&
+							itemData.option_list_v2.srv_app_exp.value &&
+							item[itemData.option_list_v2.srv_app_exp.value]
+						) {
+							itemData.option_list_v2.srv_app = item[itemData.option_list_v2.srv_app_exp.value];
+						}
+						if (itemData.option_list_v2.conditions) {
+							let conditions = itemData.option_list_v2.conditions;
+							conditions = conditions.map(cond => {
+								if (cond.value_exp && cond.value_exp.type === 'column' && cond.value_exp.value) {
+									if (item[cond.value_exp.value]) {
+										cond.value = item[cond.value_exp.value];
+									}
+								}
+								return item;
+							});
+						}
+					}
 					if (itemData.hasOwnProperty('isShowExp') && item.hasOwnProperty(itemData.column)) {
 						itemData['showExp'] = this.evalInTo(itemData, item);
 						itemData['display'] =

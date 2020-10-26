@@ -116,7 +116,7 @@ export default {
 	},
 	data() {
 		return {
-			appName: 'yjz',
+			appName: 'daq',
 			formType: 'form', // 表单类型 预览:detail 正常:form
 			activity_no: '', // 问卷编号
 			status: '未开始',
@@ -599,6 +599,22 @@ export default {
 				case '数字':
 					config.type = e.item_type_attr.numberType ? e.item_type_attr.numberType : 'number';
 					break;
+				case '用户':
+					config.type = 'treeSelector';
+					config.option_list_v2 = {
+						refed_col: 'no',
+						srv_app: 'health',
+						serviceName: 'srvhealth_person_info_select',
+						key_disp_col: 'name'
+					};
+					config.srvInfo = {
+						serviceName: 'srvhealth_person_info_select',
+						appNo: 'health',
+						isTree: false,
+						column: 'no',
+						showCol: 'name' //要展示的字段
+					};
+					break;
 				default:
 					config.type = e.item_type;
 					break;
@@ -743,7 +759,7 @@ export default {
 		}
 	},
 	beforeDestroy() {
-		uni.setStorageSync('fill_batch_no','')
+		uni.setStorageSync('fill_batch_no', '');
 	},
 	onLoad(option) {
 		if (option.formType && option.formType === 'detail') {

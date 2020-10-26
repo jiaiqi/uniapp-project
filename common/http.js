@@ -123,6 +123,7 @@ fly.interceptors.response.use(
 				icon: "none"
 			})
 		}
+		uni.hideLoading()
 		//发生网络错误后会走到这里
 		//return Promise.resolve("ssss")
 	}

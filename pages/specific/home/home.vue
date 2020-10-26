@@ -74,7 +74,7 @@ export default {
 	components: { refresh, navTab, tabBar4 },
 	data() {
 		return {
-			appName: 'yjz',
+			appName: 'daq',
 			currentPage: 'index',
 			toView: '', //回到顶部id
 			tabTitle: ['我创建的', '我反馈的'], //导航栏格式 --导航栏组件

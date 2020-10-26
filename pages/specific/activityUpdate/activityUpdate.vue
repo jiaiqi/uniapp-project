@@ -94,7 +94,7 @@ export default {
 	},
 	data() {
 		return {
-			appName: 'yjz',
+			appName: 'daq',
 			optionFormType: 'add',
 			optionForm: {
 				option_seq: 0, // 选项序号
@@ -165,6 +165,14 @@ export default {
 						{
 							label: '时间日期',
 							value: '时间日期'
+						},
+						{
+							label: '地址',
+							value: '地址'
+						},
+						{
+							label: '引用',
+							value: '引用'
 						}
 					]
 				},
@@ -208,7 +216,7 @@ export default {
 						addServiceName: 'srvdaq_option_cfg_add',
 						deleteServiceName: 'srvdaq_option_cfg_delete',
 						updateServiceName: 'srvdaq_option_cfg_update',
-						appNo: 'yjz',
+						appNo: 'daq',
 						conditions: [
 							{
 								colName: 'item_no',
@@ -357,9 +365,126 @@ export default {
 					type: 'input',
 					display: false,
 					isRequire: false,
-					isShowExp: [{ colName: 'item_type', ruleType: 'neq', value: '图片' }, { colName: 'item_type', ruleType: 'neq', value: '选项' }],
+					isShowExp: [
+						{ colName: 'item_type', ruleType: 'neq', value: '图片' },
+						{ colName: 'item_type', ruleType: 'neq', value: '选项' },
+						{ colName: 'item_type', ruleType: 'neq', value: '用户' },
+						{ colName: 'item_type', ruleType: 'neq', value: '引用' }
+					],
 					options: []
 				},
+				{
+					label: '引用类型',
+					column: 'ref_type',
+					value: '',
+					type: 'input',
+					display: false,
+					isRequire: false,
+					isShowExp: [{ colName: 'item_type', ruleType: 'eq', value: '引用' }],
+					options: []
+				},
+				{
+					label: '目标APP',
+					column: 'srv_app',
+					value: '',
+					type: 'treeSelector',
+					option_list_v2: {
+						refed_col: 'app_no',
+						srv_app: 'config',
+						serviceName: 'srvconfig_app_list_select',
+						key_disp_col: 'app_name'
+					},
+					display: false,
+					isRequire: false,
+					isShowExp: [{ colName: 'item_type', ruleType: 'eq', value: '引用' }, { colName: 'ref_type', ruleType: 'eq', value: 'all' }],
+					options: []
+				},
+				{
+					label: '目标服务',
+					column: 'serviceName',
+					value: '',
+					type: 'treeSelector',
+					option_list_v2: {
+						refed_col: 'service_name',
+						srv_app: '',
+						srv_app_exp: {
+							type: 'column',
+							value: 'srv_app'
+						},
+						serviceName: 'srvsys_service_select',
+						key_disp_col: 'service_view_name',
+						conditions: [{ colName: 'service_type', ruleType: 'eq', value: 'select' }]
+					},
+					display: false,
+					isRequire: false,
+					isShowExp: [{ colName: 'item_type', ruleType: 'eq', value: '引用' }, { colName: 'ref_type', ruleType: 'eq', value: 'all' }],
+					options: []
+				},
+				{
+					label: '引用字段',
+					column: 'refed_col',
+					value: '',
+					type: 'treeSelector',
+					option_list_v2: {
+						refed_col: 'columns',
+						srv_app: '',
+						srv_app_exp: {
+							type: 'column',
+							value: 'srv_app'
+						},
+						serviceName: 'srvsys_service_columnex_v2_select',
+						key_disp_col: 'label',
+						conditions: [
+							{
+								colName: 'service_name',
+								value: '',
+								ruleType: 'eq',
+								value_exp: {
+									type: 'column',
+									value: 'serviceName'
+								}
+							},
+							{ colName: 'use_type', value: 'list', ruleType: 'eq' }
+						]
+					},
+					display: false,
+					isRequire: false,
+					isShowExp: [{ colName: 'item_type', ruleType: 'eq', value: '引用' }, { colName: 'ref_type', ruleType: 'eq', value: 'all' }],
+					options: []
+				},
+				{
+					label: '显示字段',
+					column: 'key_disp_col',
+					value: '',
+					type: 'treeSelector',
+					option_list_v2: {
+						refed_col: 'columns',
+						srv_app: '',
+						srv_app_exp: {
+							type: 'column',
+							value: 'srv_app'
+						},
+						serviceName: 'srvsys_service_columnex_v2_select',
+						key_disp_col: 'label',
+						conditions: [
+							{
+								colName: 'service_name',
+								value: '',
+								ruleType: 'eq',
+								value_exp: {
+									type: 'column',
+									value: 'serviceName'
+								}
+							},
+							{ colName: 'use_type', value: 'list', ruleType: 'eq' }
+						]
+					},
+					display: false,
+					isRequire: false,
+					isShowExp: [{ colName: 'item_type', ruleType: 'eq', value: '引用' }, { colName: 'ref_type', ruleType: 'eq', value: 'all' }],
+					options: []
+				},
+
 				{
 					label: '分值',
 					column: 'points',
@@ -453,7 +578,7 @@ export default {
 		},
 		getOptionList() {
 			// 查找选项列表
-			let url = this.getServiceUrl('yjz', 'srvdaq_option_cfg_select', 'select');
+			let url = this.getServiceUrl('daq', 'srvdaq_option_cfg_select', 'select');
 			let req = {
 				serviceName: 'srvdaq_option_cfg_select',
 				colNames: ['*'],
@@ -538,7 +663,7 @@ export default {
 		async getOptionV2(e) {
 			let { data, config } = e;
 			let type = data.type;
-			let appName = 'yjz';
+			let appName = 'daq';
 			this.optionFormType = type;
 			console.log(config[type + 'ServiceName']);
 			let colVs = await this.getServiceV2(config[type + 'ServiceName'], type, type, appName ? appName : 'daq');
@@ -732,6 +857,8 @@ export default {
 							case 'dateTime':
 								item.value = '时间日期';
 								break;
+							case 'treeSelector':
+								item.value = '引用';
 							default:
 								break;
 						}
@@ -788,6 +915,30 @@ export default {
 						break;
 					case 'max_num':
 						item.value = itemAttr.max_num;
+						return item;
+						break;
+					case 'format':
+						item.value = itemAttr.dateType;
+						return item;
+						break;
+					case 'ref_type':
+						item.value = itemAttr.ref_type;
+						return item;
+						break;
+					case 'srv_app':
+						item.value = itemAttr.srv_app;
+						return item;
+						break;
+					case 'serviceName':
+						item.value = itemAttr.serviceName;
+						return item;
+						break;
+					case 'refed_col':
+						item.value = itemAttr.refed_col;
+						return item;
+						break;
+					case 'key_disp_col':
+						item.value = itemAttr.key_disp_col;
 						return item;
 						break;
 					default:
@@ -987,12 +1138,14 @@ export default {
 				options: [],
 				seq: e.item_seq,
 				display: true,
+				disabled: false,
 				item_type_attr: e.item_type_attr,
 				buttons: [],
 				points: e.points,
 				answer: e.answer,
 				option_img_explain: e.option_img_explain,
-				_rawData: e
+				_rawData: e,
+				option_list_v2: e.option_list_v2
 			};
 			config.buttons = this.inputBut;
 			switch (e.item_type) {
@@ -1019,6 +1172,25 @@ export default {
 					break;
 				case '数字':
 					config.type = e.item_type_attr.numberType ? e.item_type_attr.numberType : 'number';
+					break;
+				case '地址':
+					config.type = 'cascader';
+					config.srvInfo = {
+						serviceName: 'srvconfig_area_adj_select',
+						appNo: 'config',
+						isTree: true,
+						column: 'no',
+						showCol: 'path_name' //要展示的字段
+					};
+					break;
+				case '引用':
+					config.type = 'treeSelector';
+					config.option_list_v2 = {
+						refed_col: e.item_type_attr.refed_col,
+						srv_app: e.item_type_attr.srv_app,
+						serviceName: e.item_type_attr.serviceName,
+						key_disp_col: e.item_type_attr.key_disp_col
+					};
 					break;
 				default:
 					config.type = e.item_type;

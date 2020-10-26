@@ -17,7 +17,7 @@ export default {
 	components: { bxform },
 	data() {
 		return {
-			appName: 'yjz',
+			appName: 'daq',
 			navTitle: '',
 			activity_no: '',
 			activityData: null,
