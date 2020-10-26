@@ -238,10 +238,11 @@ export default {
 							colName: 'no',
 							type: 'by'
 						}
-					]
-					// order: [{ colName: 'seq', orderType: 'asc' }] ,
+					],
+					order: [{ colName: 'seq', orderType: 'asc' }]
 				};
 				let ress = await this.$http.post(urls, reqs);
+				debugger
 				if (ress.data.state === 'SUCCESS') {
 					this.categoryList = ress.data.data;
 				}

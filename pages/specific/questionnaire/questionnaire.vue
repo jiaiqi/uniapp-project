@@ -1,5 +1,5 @@
 <template>
-	<view class="cu-card article bg-blue" style="min-height: 100vh;height: auto;">
+	<view class="cu-card bg-blue" style="min-height: 100vh;height: auto;">
 		<view class="cu-item" style="padding: 10upx;">
 			<view class="question-title">
 				<view>{{ formData.title }}</view>
@@ -27,7 +27,7 @@
 				style="margin: 30upx;"
 				v-if="formType === 'form' && configCols && configCols.length > 0 && (formData['user_state'] === '未完成' || formData['answer_times'] === '多次')"
 			>
-				<button class="bg-blue line-white" type="" @click="submitForm()">提交</button>
+				<button class="button line-white" type="" @click="submitForm()">提交</button>
 			</view>
 			<!-- 			<view class="button-box" style="margin: 30upx;" v-if="formType === 'form' && configCols && configCols.length > 0 && formData['answer_times']==='多次'&& formData['user_state'] !== '未完成'">
 				<button class="bg-blue line-white" type="" @click="submitForm()">提交</button>
@@ -55,9 +55,6 @@
 			<view class="foot-btn" @click="toCreate">我要创建</view>
 			<view class="foot-btn" @click="toFeedback" v-if="activity_no !== '20200309125000000100'">意见反馈</view>
 		</view>
-		<!-- <view class="button-box" style="margin: 30upx;" v-if="formType === 'form' && configCols && configCols.length > 0">
-      <button class="bg-blue line-white" type="" @click="submitForm('submit')">提交</button>
-    </view> -->
 		<view class="qrcode-box" style="text-align: center;margin-bottom: 30upx;">
 			<view class="contact">为了及时获取最新信息</view>
 			<view class="contact">长按下方二维码 识别关注公众号</view>
@@ -816,9 +813,6 @@ export default {
 .question-title {
 	min-height: 100rpx;
 	padding: 0 0 20rpx;
-	// text-overflow: ellipsis;
-	// overflow: hidden;
-	// white-space: nowrap;
 	color: #333;
 	font-weight: 700;
 	font-size: 18px;

@@ -163,8 +163,8 @@ export default {
 		};
 	},
 	created() {
-		if (this.fields.length > 0) {
-			this.fields = this.fields.map(item => {
+		if (this.fieldModel.length > 0) {
+			this.fieldModel = this.fieldModel.map(item => {
 				if (!item.value && item.defaultValue) {
 					item.value = item.defaultValue;
 				}
@@ -352,7 +352,7 @@ export default {
 						) {
 							itemData.option_list_v2.srv_app = item[itemData.option_list_v2.srv_app_exp.value];
 						}
-						if (itemData.option_list_v2.conditions) {
+						if (itemData?.option_list_v2?.conditions) {
 							let conditions = itemData.option_list_v2.conditions;
 							conditions = conditions.map(cond => {
 								if (cond.value_exp && cond.value_exp.type === 'column' && cond.value_exp.value) {

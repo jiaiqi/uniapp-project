@@ -20,10 +20,6 @@
 					{{ dictShowValue ? dictShowValue : treeSelectorShowValue ? treeSelectorShowValue : fieldData.value }}
 				</text>
 				<view class="" v-html="fieldData.value" v-if="pageFormType === 'detail' && (fieldData.type === 'snote' || fieldData.type === 'Note')"></view>
-				<!-- 	<view
-          v-html="JSON.parse(JSON.stringify(fieldData.value).replace(/\<img/gi, '<img width=100% height=auto '))"
-          v-if="pageFormType === 'detail' && (fieldData.type === 'snote' || fieldData.type === 'Note')"
-        ></view> -->
 				<view class="" v-else-if="pageFormType === 'detail' && fieldData.type === 'images'">
 					<image
 						v-if="fieldData.type === 'images'"
@@ -41,12 +37,17 @@
 			<view
 				class="form-content"
 				:class="{
-					alo_radio: fieldData.type === 'radio' || fieldData.type === 'radioFk' || fieldData.type === 'checkbox' || fieldData.type === 'checkbox' || fieldData.type === 'images',
+					alo_radio: fieldData.type === 'radio' || fieldData.type === 'radioFk' || fieldData.type === 'checkboxFk' || fieldData.type === 'checkbox' || fieldData.type === 'images',
 					valid_error: !valid.valid
 				}"
 				v-if="pageFormType === 'form' || pageFormType === 'add' || pageFormType === 'update'"
 			>
-				<radio-group @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
+				<u-radio-group v-model="fieldData.value" @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
+					<u-radio color="#0bc99d" :disabled="fieldData.disabled ? fieldData.disabled : false" v-for="(itema, index) in fieldData.options" :name="itema" v-model="fieldData.value">
+						{{ itema }}
+					</u-radio>
+				</u-radio-group>
+<!-- 				<radio-group @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
 					<radio
 						color="#0bc99d"
 						:key="index"
@@ -58,8 +59,14 @@
 					>
 						<span style="flex: 1;padding-left: 10rpx;">{{ itema }}</span>
 					</radio>
-				</radio-group>
-				<radio-group @change="radioChange" v-else-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
+				</radio-group> -->
+				<u-radio-group v-model="fieldData.value" @change="radioChange" v-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
+					<u-radio color="#0bc99d" :disabled="fieldData.disabled ? fieldData.disabled : false" v-for="(itema, index) in fieldData.options" :name="itema.value" v-model="fieldData.value">
+						{{ itema.value }}
+						<u-image width="100%" height="300rpx" v-if="itema.option_img_explain" :src="getOptionImgExplain(itema.option_img_explain)" mode="aspectFit"></u-image>
+					</u-radio>
+				</u-radio-group>
+<!-- 				<radio-group @change="radioChange" v-else-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
 					<radio
 						color="#0bc99d"
 						class="blue radio"
@@ -75,7 +82,7 @@
 							<u-image width="100%" height="300rpx" v-if="itema.option_img_explain" :src="getOptionImgExplain(itema.option_img_explain)" mode="aspectFit"></u-image>
 						</view>
 					</radio>
-				</radio-group>
+				</radio-group> -->
 				<checkbox-group name="checkbox-group" class="checkbox-group" @change="radioChange" v-else-if="fieldData.type === 'checkbox'" :class="!valid.valid ? 'valid_error' : ''">
 					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox">
 						<checkbox
@@ -84,7 +91,7 @@
 							:disabled="fieldData.disabled ? fieldData.disabled : false"
 							:checked="fieldData && fieldData.value && isArray(fieldData.value) ? fieldData.value.indexOf(item) !== -1 : false"
 						/>
-						<text style="flex: 1;">{{ item }}</text>
+						<text style="flex: 1;" class="text">{{ item }}</text>
 					</label>
 				</checkbox-group>
 				<checkbox-group name="checkbox-group" class="checkbox-group" @change="radioChange" v-else-if="fieldData.type === 'checkboxFk'" :class="!valid.valid ? 'valid_error' : ''">
@@ -95,7 +102,7 @@
 							:disabled="fieldData.disabled ? fieldData.disabled : false"
 							:checked="fieldData && fieldData.value && isArray(fieldData.value) ? fieldData.value.indexOf(item.key) !== -1 : false"
 						/>
-						<text style="flex: 1;">{{ item.label }}</text>
+						<text style="flex: 1;" class="text">{{ item.label }}</text>
 					</label>
 				</checkbox-group>
 				<!-- <view v-else-if="fieldData.type === 'images'" style="width: 100%;">
@@ -117,7 +124,7 @@
 					></robby-image-upload>
 				</view>
 				<view class="" v-else-if="fieldData.type === 'file'">
-					<attachment
+					<!-- 	<attachment
 						mode="create"
 						:canUploadFile="true"
 						:uploadFileUrl="uploadFileUrl"
@@ -126,7 +133,7 @@
 						:srvInfo="formData"
 						:showProcess="true"
 						:attachmentList.sync="attachmentList"
-					></attachment>
+					></attachment> -->
 				</view>
 				<textarea
 					style="min-height: 60px;width: 100%;"
@@ -308,6 +315,15 @@
 		</view>
 		<view class="cu-modal bottom-modal" :class="{ show: showTreeSelector }">
 			<view class="cu-dialog tree-selector">
+				<u-search
+					:show-action="false"
+					action-text="搜索"
+					:animation="true"
+					:shape="'square'"
+					v-model="treeSearchVal"
+					@change="getTreeSelectorDataWithKey"
+					style="margin: 20rpx;"
+				></u-search>
 				<bxTreeSelector
 					:srvInfo="isArray(fieldData.option_list_v2) ? null : fieldData.option_list_v2"
 					:treeData="treeSelectorData"
@@ -317,12 +333,13 @@
 					@clickParentNode="onTreeGridChange"
 					@clickLastNode="onMenu"
 				></bxTreeSelector>
+				<u-loadmore @loadmore="loadMoreTreeData" :status="treeDataStatus" :load-text="loadText" />
 				<view class="dialog-button"><view class="cu-btn bg-blue shadow" @tap="showTreeSelector = false">取消</view></view>
 			</view>
 		</view>
 		<view class="cu-modal bottom-modal" :class="{ show: showRichText }">
-			<view class="cu-dialog  rich-text">
-				<bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor>
+			<view class="cu-dialog rich-text">
+				<!-- <bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor> -->
 				<view class="dialog-button">
 					<view
 						class="cu-btn bg-blue shadow"
@@ -349,8 +366,8 @@ import cascaderSelector from '@/components/cascader/cascaderSelector.vue';
 import uniPopup from '@/components/uni-popup/uni-popup.vue';
 // import bxTreeSelector from '@/components/bx-tree-selector/bx-tree-selector.vue';
 import bxTreeSelector from '@/components/tree-selector/tree-selector.vue';
-import bxEditor from '@/components/ueditor/ueditor.vue';
-import attachment from '@/components/file-upload/file-upload.vue';
+// import bxEditor from '@/components/ueditor/ueditor.vue';
+// import attachment from '@/components/file-upload/file-upload.vue';
 let _this = null;
 export default {
 	name: 'bxFormItem',
@@ -359,9 +376,9 @@ export default {
 		robbyImageUpload,
 		cascaderSelector,
 		uniPopup,
-		bxEditor,
-		bxTreeSelector,
-		attachment
+		// bxEditor,
+		bxTreeSelector
+		// attachment
 	},
 	props: {
 		field: {
@@ -435,6 +452,13 @@ export default {
 			listRedundance: [],
 			showOptionsList: false,
 			treeSelectorData: [],
+			treeDataStatus: 'loadmore',
+			loadText: {
+				loadmore: '点击加载更多',
+				loading: '努力加载中',
+				nomore: '数据已经全部加载完成'
+			},
+			treeSearchVal: '',
 			showTreeSelector: false,
 			showRichText: false,
 			attachmentList: [],
@@ -444,7 +468,12 @@ export default {
 			picker: ['网络状况较差，请稍后进行选择'],
 			modelData: '',
 			oriPicker: [],
-			treeSelectorShowValue: '' //属性选择器input框中显示的值
+			treeSelectorShowValue: '', //属性选择器input框中显示的值
+			treePageInfo: {
+				total: 0,
+				rownumber: 20,
+				pageNo: 1
+			}
 		};
 	},
 	updated() {},
@@ -827,18 +856,18 @@ export default {
 			}
 		},
 		radioChange(e) {
-			if (this.fieldData.type === 'radioFk' || this.fieldData.type === 'checkboxFk') {
-				this.fieldData.value = e.target.value;
+			if (this.fieldData.type === 'radioFk') {
+				// this.fieldData.value = e.target.value;
 				// this.fieldData.defaultValue = e.target.value;
 				this.$emit('on-value-change', this.fieldData);
 			} else {
-				this.fieldData.value = e.target.value;
+				if(this.fieldData.type==='checkboxFk'||this.fieldData.type==='checkbox'){
+					this.fieldData.value = e.target.value;
+				}
 				this.onInputBlur();
 				this.$emit('on-value-change', this.fieldData);
-				console.log(e.target.value);
 				this.getValid();
 			}
-			console.log('点击选项', this.fieldData.value, e);
 		},
 		onInputChange(e) {
 			if (this.fieldData.type === 'number' || this.fieldData.type === 'digit') {
@@ -984,12 +1013,58 @@ export default {
 		onTreeGridChange(e) {
 			console.log('onTreeGridChange', e);
 		},
-		async getTreeSelectorData(cond, serv) {
-			console.log('detailFiledDatadetailFiledData', this.detailFiledData);
+		getTreeSelectorDataWithKey() {
+			if (this.treeSearchVal) {
+				let option = this.fieldData.option_list_v2;
+				let relation_condition = {
+					relation: 'OR',
+					data: []
+				};
+				if (!option.key_disp_col && !option.refed_col) {
+					return;
+				}
+				if (option.key_disp_col) {
+					relation_condition.data.push({
+						relation: 'AND',
+						data: [
+							{
+								colName: option.key_disp_col,
+								value: this.treeSearchVal,
+								ruleType: '[like]'
+							}
+						]
+					});
+				}
+				if (option.refed_col) {
+					relation_condition.data.push({
+						relation: 'AND',
+						data: [
+							{
+								colName: option.refed_col,
+								value: this.treeSearchVal,
+								ruleType: '[like]'
+							}
+						]
+					});
+				}
+				this.getTreeSelectorData(null, null, relation_condition);
+			}
+		},
+		loadMoreTreeData() {
+			if (this.treePageInfo.total > this.treePageInfo.pageNo * this.treePageInfo.rownumber) {
+				this.treeDataStatus = 'loading';
+				this.treePageInfo.pageNo++;
+				this.getTreeSelectorData();
+			} else {
+				this.treeDataStatus = 'nomore';
+			}
+		},
+		async getTreeSelectorData(cond, serv, relation_condition) {
 			let self = this;
 			let req = {
 				serviceName: serv ? serv : self.fieldData.option_list_v2 ? self.fieldData.option_list_v2.serviceName : '',
-				colNames: ['*']
+				colNames: ['*'],
+				page: { pageNo: this.treePageInfo.pageNo, rownumber: this.treePageInfo.rownumber }
 			};
 			let appName = '';
 			if (self.fieldData.option_list_v2 && self.fieldData.option_list_v2.srv_app) {
@@ -1028,7 +1103,6 @@ export default {
 					}
 					if (item.value_exp) {
 						delete item.value_exp;
-						debugger;
 					}
 					return item;
 				});
@@ -1038,16 +1112,31 @@ export default {
 					return;
 				}
 			}
+			if (relation_condition && typeof relation_condition === 'object') {
+				req.relation_condition = relation_condition;
+			}
 			if (req.serviceName === 'srvsso_user_select') {
 				req.condition = [{ colName: 'dept_no', ruleType: 'like', value: 'bx100sys' }];
 				appName = 'sso';
 			}
 			let res = await self.onRequest('select', req.serviceName, req, appName);
-			console.log('0000000000000000000', res, this.service);
+			if (res.data.state === 'SUCCESS' && res.data.page && res.data.page.total > res.data.page.rownumber * res.data.page.pageNo) {
+				this.treeDataStatus = 'loadmore';
+			} else {
+				this.treeDataStatus = 'nomore';
+			}
 			if (res.data.state === 'SUCCESS' && res.data.data.length > 0) {
+				if (res.data.page) {
+					this.treePageInfo = res.data.page;
+				}
+
 				let hasParentNo = res.data.data.filter(item => item.parent_no).length;
 				if (hasParentNo) {
 					self.treeSelectorData = self.treeReform(res.data.data, 'parent_no', 'no', self.fieldData.option_list_v2);
+					if (res.data.page && res.data.page.pageNo > 1) {
+						let data = self.treeReform(res.data.data, 'parent_no', 'no', self.fieldData.option_list_v2);
+						self.treeSelectorData = [...self.treeSelectorData, ...data];
+					}
 					self.treeSelectorData = self.treeSelectorData.map((item, index) => {
 						let a = {
 							title: '',
@@ -1067,14 +1156,19 @@ export default {
 						return a;
 					});
 				} else {
-					self.treeSelectorData = res.data.data;
+					if (res.data.page && res.data.page.pageNo > 1) {
+						let data = res.data.data;
+						self.treeSelectorData = [...self.treeSelectorData, ...data];
+					} else {
+						self.treeSelectorData = res.data.data;
+					}
 				}
 				self.treeSelectorData.forEach(item => {
 					if (self.fieldData.option_list_v2 && item[self.fieldData.option_list_v2.refed_col] === self.fieldData.value) {
 						self.fieldData['colData'] = item;
 					}
 				});
-			} else if (req.serviceName === 'srvsys_service_columnex_v2_select' && Array.isArray(res.data.data.srv_cols)) {
+			} else if (req.serviceName === 'srvsys_service_columnex_v2_select' && res.data && res.data.data && Array.isArray(res.data.data.srv_cols)) {
 				self.treeSelectorData = res.data.data.srv_cols;
 			}
 		}
@@ -1137,6 +1231,19 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: flex-start;
+}
+.cu-modal {
+	z-index: 9999;
+}
+.checkbox-group {
+	display: flex;
+	flex-direction: column;
+	.checkbox {
+		padding: 10rpx 0;
+		.text {
+			margin-left: 20rpx;
+		}
+	}
 }
 .form-content {
 	width: 100%;
@@ -1289,72 +1396,20 @@ uni-text.input-icon {
 .cu-card.article > .cu-item .title {
 	line-height: normal;
 }
-// uni-checkbox /deep/ .uni-checkbox-input {
-//   width: 16px !important;
-//   height: 16px !important;
-// }
-// uni-checkbox-group .checkbox {
-//   display: flex;
-//   align-items: center;
-// }
-// uni-radio::before,
-// uni-checkbox::before {
-//   font-family: 'cuIcon';
-//   content: '\E645';
-//   position: absolute;
-//   color: #ffffff !important;
-//   top: 50%;
-//   margin-top: -8px;
-//   right: 2px;
-//   font-size: 14px;
-//   line-height: 14px;
-//   pointer-events: none;
-//   -webkit-transform: scale(1, 1);
-//   transform: scale(1, 1);
-//   -webkit-transition: all 0.3s ease-in-out 0s;
-//   transition: all 0.3s ease-in-out 0s;
-//   z-index: 9;
-// }
-// uni-radio /deep/ .uni-radio-input {
-//   margin: 0;
-//   width: 16px !important;
-//   height: 16px !important;
-// }
-// .radio /deep/ uni-radio-input-checked {
-//   width: 16px !important;
-//   height: 16px !important;
-//   background-color: white !important;
-// }
-// .alo_radio /deep/ radio.radio[checked]::after,
-// radio.radio .uni-radio-input-checked::after {
-//   content: '';
-//   background-color: transparent;
-//   display: block;
-//   position: absolute;
-//   width: 8px;
-//   height: 8px;
-//   z-index: 999;
-//   top: 0px;
-//   // left: -272px !important;
-//   right: 0;
-//   bottom: 0;
-//   margin: auto;
-//   border-radius: 100px;
-//   border: 4px solid #ffffff !important;
-// }
 .cu-dialog.tree-selector,
 .cu-dialog.rich-text {
 	height: auto;
 	padding-top: 50rpx;
-	max-height: calc(100vh - 150upx);
 	background-color: #fff;
 	z-index: 199;
 	.dialog-button {
 		display: flex;
 		justify-content: center;
-		height: 100upx;
+		// height: 100upx;
 		align-items: center;
 		// padding-right: 50upx;
+		padding: 20rpx 0;
+		margin-top: 50rpx;
 	}
 }
 .pickers {
@@ -1367,7 +1422,7 @@ uni-text.input-icon {
 .cu-form-group uni-picker::after {
 	display: none !important;
 }
-.uni-popup{
+.uni-popup {
 	z-index: 10000;
 }
 </style>

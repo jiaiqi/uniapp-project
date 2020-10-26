@@ -102,10 +102,11 @@ export default {
   margin: 0 auto;
   padding: 20upx 20upx 40upx;
   min-height: 100vh;
-  box-shadow: 0 0 5px rgba(0, 0, 100, 0.27), 0 0 20px rgba(0, 100, 100, 0.1) inset;
-  border-bottom-left-radius: 20px 500px;
-  border-bottom-right-radius: 500px 30px;
-  border-top-right-radius: 115px 30px;
+	box-shadow: -5px -20px 5px rgba(0, 0, 100, 0.27), 1px 0px 10px rgba(0, 100, 100, 0.1) inset;
+  // box-shadow: 0 0 5px rgba(0, 0, 100, 0.27), 0 0 20px rgba(0, 100, 100, 0.1) inset;
+  // border-bottom-left-radius: 20px 500px;
+  // border-bottom-right-radius: 500px 30px;
+  // border-top-right-radius: 115px 30px;
   .header {
     display: flex;
     align-items: center;
@@ -131,8 +132,8 @@ export default {
     align-items: flex-end;
   }
   .create-time {
-    color: #999;
-    margin: 20upx 0 0;
+    color: #888;
+    // margin: 20upx 0 0;
   }
   .content {
     min-height: 800upx;

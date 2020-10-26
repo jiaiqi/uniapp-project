@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-blue" :isBack="true">
+		<cu-custom bgColor="bg-blue" :isBack="false">
 			<block slot="backText">返回</block>
 			<block slot="content">活动问题编辑</block>
 		</cu-custom>
@@ -1069,12 +1069,14 @@ export default {
 							}
 							return item;
 						});
-						self.optionFormConfig = self.optionFormConfig.map(item => {
-							if (item.column !== 'item_no') {
-								item.value = '';
-							}
-							return item;
-						});
+						if (Array.isArray(self.optionFormConfig)) {
+							self.optionFormConfig = self.optionFormConfig.map(item => {
+								if (item.column !== 'item_no') {
+									item.value = '';
+								}
+								return item;
+							});
+						}
 					}
 				}
 				if (type !== 'save') {
