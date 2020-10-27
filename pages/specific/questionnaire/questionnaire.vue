@@ -27,7 +27,7 @@
 				style="margin: 30upx;"
 				v-if="formType === 'form' && configCols && configCols.length > 0 && (formData['user_state'] === '未完成' || formData['answer_times'] === '多次')"
 			>
-				<button class="button line-white" type="" @click="submitForm()">提交</button>
+				<button class="button bg-blue line-white" type="" @click="submitForm()">提交</button>
 			</view>
 			<!-- 			<view class="button-box" style="margin: 30upx;" v-if="formType === 'form' && configCols && configCols.length > 0 && formData['answer_times']==='多次'&& formData['user_state'] !== '未完成'">
 				<button class="bg-blue line-white" type="" @click="submitForm()">提交</button>
@@ -205,7 +205,7 @@ export default {
 					itemData = [
 						{
 							item_no: e.column,
-							option_data: e.value
+							option_data: e.value.filter(item=>item&&item)
 						}
 					];
 				}
@@ -262,7 +262,7 @@ export default {
 										option_data: [itemData[item]]
 									};
 									if (Array.isArray(itemData[item])) {
-										obj.option_data = itemData[item];
+										obj.option_data = itemData[item].filter(i=>i&&i);
 									}
 									if (itemData[item]) {
 										resultData.push(obj);
@@ -567,7 +567,9 @@ export default {
 				display: true,
 				points: e.points,
 				answer: e.answer,
-				option_img_explain: e.option_img_explain
+				option_img_explain: e.option_img_explain,
+				_rawData: e,
+				option_list_v2: e.option_list_v2
 			};
 			if (this.formType === 'detail') {
 				config.disabled = true;
@@ -596,20 +598,23 @@ export default {
 				case '数字':
 					config.type = e.item_type_attr.numberType ? e.item_type_attr.numberType : 'number';
 					break;
-				case '用户':
+				case '地址':
+					config.type = 'cascader';
+					config.srvInfo = {
+						serviceName: 'srvconfig_area_adj_select',
+						appNo: 'config',
+						isTree: true,
+						column: 'no',
+						showCol: 'path_name' //要展示的字段
+					};
+					break;
+				case '引用':
 					config.type = 'treeSelector';
 					config.option_list_v2 = {
-						refed_col: 'no',
-						srv_app: 'health',
-						serviceName: 'srvhealth_person_info_select',
-						key_disp_col: 'name'
-					};
-					config.srvInfo = {
-						serviceName: 'srvhealth_person_info_select',
-						appNo: 'health',
-						isTree: false,
-						column: 'no',
-						showCol: 'name' //要展示的字段
+						refed_col: e.item_type_attr.refed_col,
+						srv_app: e.item_type_attr.srv_app,
+						serviceName: e.item_type_attr.serviceName,
+						key_disp_col: e.item_type_attr.key_disp_col
 					};
 					break;
 				default:

@@ -47,7 +47,7 @@
 						{{ itema }}
 					</u-radio>
 				</u-radio-group>
-<!-- 				<radio-group @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
+				<!-- 				<radio-group @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
 					<radio
 						color="#0bc99d"
 						:key="index"
@@ -61,14 +61,20 @@
 					</radio>
 				</radio-group> -->
 				<u-radio-group v-model="fieldData.value" @change="radioChange" v-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
-					<u-radio color="#0bc99d" :disabled="fieldData.disabled ? fieldData.disabled : false" v-for="(itema, index) in fieldData.options" :name="itema.value" v-model="fieldData.value">
-						{{ itema.value }}
+					<u-radio
+						color="#2979ff"
+						:disabled="fieldData.disabled ? fieldData.disabled : false"
+						v-for="(itema, index) in fieldData.options"
+						:name="itema.value"
+						v-model="fieldData.value"
+					>
+						{{ itema.label?itema.label:itema.value }}
 						<u-image width="100%" height="300rpx" v-if="itema.option_img_explain" :src="getOptionImgExplain(itema.option_img_explain)" mode="aspectFit"></u-image>
 					</u-radio>
 				</u-radio-group>
-<!-- 				<radio-group @change="radioChange" v-else-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
+				<!-- 				<radio-group @change="radioChange" v-else-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
 					<radio
-						color="#0bc99d"
+						color="#2979ff"
 						class="blue radio"
 						:disabled="fieldData.disabled ? fieldData.disabled : false"
 						:checked="!!fieldData.value && itema.value === fieldData.value"
@@ -83,31 +89,23 @@
 						</view>
 					</radio>
 				</radio-group> -->
-				<checkbox-group name="checkbox-group" class="checkbox-group" @change="radioChange" v-else-if="fieldData.type === 'checkbox'" :class="!valid.valid ? 'valid_error' : ''">
-					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox">
-						<checkbox
-							color="#0bc99d"
-							:value="item"
-							:disabled="fieldData.disabled ? fieldData.disabled : false"
-							:checked="fieldData && fieldData.value && isArray(fieldData.value) ? fieldData.value.indexOf(item) !== -1 : false"
-						/>
+				<checkbox-group name="checkbox-group" class="checkbox-group" v-else-if="fieldData.type === 'checkbox'" :class="!valid.valid ? 'valid_error' : ''">
+					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox" @click="radioChange(item)">
+						<checkbox color="#2979ff" :value="item" :disabled="fieldData.disabled ? fieldData.disabled : false" :checked="fieldData.value.indexOf(item) !== -1" />
 						<text style="flex: 1;" class="text">{{ item }}</text>
 					</label>
 				</checkbox-group>
-				<checkbox-group name="checkbox-group" class="checkbox-group" @change="radioChange" v-else-if="fieldData.type === 'checkboxFk'" :class="!valid.valid ? 'valid_error' : ''">
-					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox">
-						<checkbox
-							color="#0bc99d"
-							:value="item.key"
-							:disabled="fieldData.disabled ? fieldData.disabled : false"
-							:checked="fieldData && fieldData.value && isArray(fieldData.value) ? fieldData.value.indexOf(item.key) !== -1 : false"
-						/>
+				<checkbox-group name="checkbox-group" class="checkbox-group" v-else-if="fieldData.type === 'checkboxFk'" :class="!valid.valid ? 'valid_error' : ''">
+					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox" @click="radioChange(item, index)">
+						<checkbox color="#2979ff" class="blue" :class="isChecked(item.value) ? 'checked' : ''" :checked="isChecked(item.value) ? true : false" :value="item.value"></checkbox>
+
+						<!-- <checkbox color="#2979ff" :value="item.value" :disabled="fieldData.disabled ? fieldData.disabled : false" :checked="fieldData.value.includes(item.value)" /> -->
 						<text style="flex: 1;" class="text">{{ item.label }}</text>
 					</label>
+					<!-- 			<u-checkbox @change="radioChange(item, index)" v-model="item.checked" v-for="(item, index) in fieldData.options" :key="index" :name="item.value">
+						{{ item.value }}
+					</u-checkbox> -->
 				</checkbox-group>
-				<!-- <view v-else-if="fieldData.type === 'images'" style="width: 100%;">
-					<image style="width: 100%;" v-for="(item,index) in imagesUrl" :key="index" :src="item" mode="aspectFit"></image>
-				</view> -->
 				<view v-else-if="fieldData.type === 'images'">
 					<robby-image-upload
 						:value="imagesUrl"
@@ -598,6 +596,17 @@ export default {
 					return obj;
 				});
 			}
+		} else if (Array.isArray(this.fieldData.options) && this.fieldData.options.length > 0) {
+			this.fieldData.options = this.fieldData.options.map(item => {
+				if (this.fieldData.type === 'checkboxFk') {
+					if (Array.isArray(this.fieldData.value) && this.fieldData.value.includes(item.value)) {
+						item.checked === true;
+					} else {
+						item.checked === false;
+					}
+				}
+				return item;
+			});
 		}
 		this.getDefVal();
 	},
@@ -855,14 +864,35 @@ export default {
 				});
 			}
 		},
-		radioChange(e) {
+		radioChange(e, index) {
 			if (this.fieldData.type === 'radioFk') {
 				// this.fieldData.value = e.target.value;
 				// this.fieldData.defaultValue = e.target.value;
 				this.$emit('on-value-change', this.fieldData);
 			} else {
-				if(this.fieldData.type==='checkboxFk'||this.fieldData.type==='checkbox'){
-					this.fieldData.value = e.target.value;
+				if (this.fieldData.type === 'checkboxFk') {
+					// let bool = this.fieldData.options[index];
+					// bool.checked = !bool.checked;
+					// this.$set(this.fieldData.options, index, bool);
+					// let arr = this.fieldData.options.filter(item => item.checked).map(item => item.value);
+					// arr = arr.filter(item => item && item);
+					let arr = this.fieldData.value;
+					if (Array.isArray(arr) && arr.indexOf(e.value) === -1) {
+						arr.push(e.value);
+					} else {
+						arr.splice(arr.indexOf(e.value), 1);
+					}
+					this.fieldData.value = arr;
+				} else if (this.fieldData.type === 'checkbox') {
+					if (Array.isArray(this.fieldData.value)) {
+						let arr = this.deepClone(this.fieldData.value);
+						if (Array.isArray(arr) && arr.indexOf(e) === -1) {
+							arr.push(e);
+						} else {
+							arr.splice(arr.indexOf(e), 1);
+						}
+						this.fieldData.value = arr;
+					}
 				}
 				this.onInputBlur();
 				this.$emit('on-value-change', this.fieldData);
@@ -1048,6 +1078,13 @@ export default {
 					});
 				}
 				this.getTreeSelectorData(null, null, relation_condition);
+			}
+		},
+		isChecked(e) {
+			if (this.fieldData&&Array.isArray(this.fieldData.value) && this.fieldData.value.includes(e)) {
+				return true;
+			} else {
+				return false;
 			}
 		},
 		loadMoreTreeData() {
