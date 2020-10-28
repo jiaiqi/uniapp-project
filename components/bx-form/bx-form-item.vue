@@ -43,8 +43,15 @@
 				v-if="pageFormType === 'form' || pageFormType === 'add' || pageFormType === 'update'"
 			>
 				<u-radio-group v-model="fieldData.value" @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
-					<u-radio color="#0bc99d" :disabled="fieldData.disabled ? fieldData.disabled : false" v-for="(itema, index) in fieldData.options" :name="itema" v-model="fieldData.value">
-						{{ itema }}
+					<u-radio
+						class="radio"
+						color="#0bc99d"
+						:disabled="fieldData.disabled ? fieldData.disabled : false"
+						v-for="(itema, index) in fieldData.options"
+						:name="itema"
+						v-model="fieldData.value"
+					>
+						<view style="max-width: 700rpx;">{{ itema }}</view>
 					</u-radio>
 				</u-radio-group>
 				<!-- 				<radio-group @change="radioChange" v-if="fieldData.type === 'radio'" :class="!valid.valid ? 'valid_error' : ''">
@@ -62,13 +69,14 @@
 				</radio-group> -->
 				<u-radio-group v-model="fieldData.value" @change="radioChange" v-if="fieldData.type === 'radioFk'" :class="!valid.valid ? 'valid_error' : ''">
 					<u-radio
+						class="radio"
 						color="#2979ff"
 						:disabled="fieldData.disabled ? fieldData.disabled : false"
 						v-for="(itema, index) in fieldData.options"
 						:name="itema.value"
 						v-model="fieldData.value"
 					>
-						{{ itema.label?itema.label:itema.value }}
+						<view class="radio-label">{{ itema.label ? itema.label : itema.value }}</view>
 						<u-image width="100%" height="300rpx" v-if="itema.option_img_explain" :src="getOptionImgExplain(itema.option_img_explain)" mode="aspectFit"></u-image>
 					</u-radio>
 				</u-radio-group>
@@ -98,13 +106,8 @@
 				<checkbox-group name="checkbox-group" class="checkbox-group" v-else-if="fieldData.type === 'checkboxFk'" :class="!valid.valid ? 'valid_error' : ''">
 					<label v-for="(item, index) in fieldData.options" :key="index" class="checkbox" @click="radioChange(item, index)">
 						<checkbox color="#2979ff" class="blue" :class="isChecked(item.value) ? 'checked' : ''" :checked="isChecked(item.value) ? true : false" :value="item.value"></checkbox>
-
-						<!-- <checkbox color="#2979ff" :value="item.value" :disabled="fieldData.disabled ? fieldData.disabled : false" :checked="fieldData.value.includes(item.value)" /> -->
 						<text style="flex: 1;" class="text">{{ item.label }}</text>
 					</label>
-					<!-- 			<u-checkbox @change="radioChange(item, index)" v-model="item.checked" v-for="(item, index) in fieldData.options" :key="index" :name="item.value">
-						{{ item.value }}
-					</u-checkbox> -->
 				</checkbox-group>
 				<view v-else-if="fieldData.type === 'images'">
 					<robby-image-upload
@@ -122,7 +125,7 @@
 					></robby-image-upload>
 				</view>
 				<view class="" v-else-if="fieldData.type === 'file'">
-					<!-- 	<attachment
+					<attachment
 						mode="create"
 						:canUploadFile="true"
 						:uploadFileUrl="uploadFileUrl"
@@ -131,7 +134,7 @@
 						:srvInfo="formData"
 						:showProcess="true"
 						:attachmentList.sync="attachmentList"
-					></attachment> -->
+					></attachment>
 				</view>
 				<textarea
 					style="min-height: 60px;width: 100%;"
@@ -159,12 +162,12 @@
 					<!-- <view class="picker">{{ index > -1 ? picker[index] : '请选择' }}</view> -->
 					<input type="text" :placeholder="'点击编辑' + fieldData.label" :value="picker[index]" :class="!valid.valid ? 'valid_error' : ''" name="input" :disabled="true" />
 				</picker>
-				<!--  <bx-editor
-          :field="fieldData"
-          v-if="(fieldData.type === 'snote' || fieldData.type === 'Note') && !fieldData.disabled"
-          ref="bxEditor"
-          @fieldData-value-changed="editorValueChange"
-        ></bx-editor> -->
+				<bx-editor
+					:field="fieldData"
+					v-if="(fieldData.type === 'snote' || fieldData.type === 'Note') && !fieldData.disabled"
+					ref="bxEditor"
+					@fieldData-value-changed="editorValueChange"
+				></bx-editor>
 				<view
 					class="content padding-0"
 					style="padding:0;width: 100%!important;flex-direction: column;position: relative;"
@@ -364,8 +367,8 @@ import cascaderSelector from '@/components/cascader/cascaderSelector.vue';
 import uniPopup from '@/components/uni-popup/uni-popup.vue';
 // import bxTreeSelector from '@/components/bx-tree-selector/bx-tree-selector.vue';
 import bxTreeSelector from '@/components/tree-selector/tree-selector.vue';
-// import bxEditor from '@/components/ueditor/ueditor.vue';
-// import attachment from '@/components/file-upload/file-upload.vue';
+import bxEditor from '@/components/ueditor/ueditor.vue';
+import attachment from '@/components/file-upload/file-upload.vue';
 let _this = null;
 export default {
 	name: 'bxFormItem',
@@ -374,9 +377,9 @@ export default {
 		robbyImageUpload,
 		cascaderSelector,
 		uniPopup,
-		// bxEditor,
-		bxTreeSelector
-		// attachment
+		bxEditor,
+		bxTreeSelector,
+		attachment
 	},
 	props: {
 		field: {
@@ -1081,7 +1084,7 @@ export default {
 			}
 		},
 		isChecked(e) {
-			if (this.fieldData&&Array.isArray(this.fieldData.value) && this.fieldData.value.includes(e)) {
+			if (this.fieldData && Array.isArray(this.fieldData.value) && this.fieldData.value.includes(e)) {
 				return true;
 			} else {
 				return false;
@@ -1255,7 +1258,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .input-sm {
 	height: 2.4em;
 	line-height: 2.4em;
@@ -1286,6 +1289,12 @@ export default {
 	width: 100%;
 	radio-group {
 		width: 100%;
+	}
+	/deep/.u-radio__label {
+		max-width: 700rpx;
+	}
+	.u-radio{
+		max-width: 700rpx;
 	}
 	.radio {
 		min-width: calc(33% - 40rpx);
