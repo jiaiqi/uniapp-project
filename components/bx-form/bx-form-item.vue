@@ -162,12 +162,6 @@
 					<!-- <view class="picker">{{ index > -1 ? picker[index] : '请选择' }}</view> -->
 					<input type="text" :placeholder="'点击编辑' + fieldData.label" :value="picker[index]" :class="!valid.valid ? 'valid_error' : ''" name="input" :disabled="true" />
 				</picker>
-				<bx-editor
-					:field="fieldData"
-					v-if="(fieldData.type === 'snote' || fieldData.type === 'Note') && !fieldData.disabled"
-					ref="bxEditor"
-					@fieldData-value-changed="editorValueChange"
-				></bx-editor>
 				<view
 					class="content padding-0"
 					style="padding:0;width: 100%!important;flex-direction: column;position: relative;"
@@ -340,13 +334,21 @@
 		</view>
 		<view class="cu-modal bottom-modal" :class="{ show: showRichText }">
 			<view class="cu-dialog rich-text">
-				<!-- <bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor> -->
+				<bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor>
 				<view class="dialog-button">
+					<view
+						class="cu-btn bg-grey shadow margin-right"
+						@tap="
+							showRichText = false;
+						"
+					>
+					 取消
+					</view>
 					<view
 						class="cu-btn bg-blue shadow"
 						@tap="
 							showRichText = false;
-							getValid();
+							saveEditorValue()
 						"
 					>
 						确定
@@ -682,11 +684,17 @@ export default {
 				console.log('获取选择楼房');
 			}
 		},
+		saveEditorValue(){
+			if(this.fieldData.editValue){
+				this.fieldData.value = this.fieldData.editValue
+			}
+			this.getValid();
+			this.$emit('on-value-change', this.fieldData.editorData);
+		},
 		editorValueChange(name, e) {
-			this.fieldData.value = e.value;
+			this.fieldData.editValue = e.value;
 			e.column = e.info.name;
-			console.log(e);
-			this.$emit('on-value-change', e);
+			this.fieldData.editorData = e
 		},
 		PickerChange(e, itemFile) {
 			let self = this;
@@ -1277,9 +1285,14 @@ export default {
 }
 .checkbox-group {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 	.checkbox {
 		padding: 10rpx 0;
+		min-width: 30%;
+		padding-right: 50rpx;
+		&.wrap-row {
+			width: 100%;
+		}
 		.text {
 			margin-left: 20rpx;
 		}
@@ -1293,7 +1306,7 @@ export default {
 	/deep/.u-radio__label {
 		max-width: 700rpx;
 	}
-	.u-radio{
+	.u-radio {
 		max-width: 700rpx;
 	}
 	.radio {
