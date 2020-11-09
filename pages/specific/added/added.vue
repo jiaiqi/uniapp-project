@@ -92,6 +92,7 @@ export default {
 			if (!itemData) {
 				return;
 			}
+			
 			uni.showModal({
 				title: '提示',
 				content: type === 'add' ? '确认创建问卷？' : type === 'update' ? '确认修改问卷信息？' : '',
@@ -102,6 +103,7 @@ export default {
 						let req = [{ serviceName: 'srvdaq_activity_cfg_add', data: [itemData] }];
 						if (itemData) {
 							console.log('itemData', itemData);
+						
 							if (self.activity_no) {
 								url = self.getServiceUrl(self.appName ? self.appName : 'daq', 'srvdaq_activity_cfg_update', 'operate');
 								req = [{ serviceName: 'srvdaq_activity_cfg_update', condition: [{ colName: 'activity_no', ruleType: 'eq', value: self.activity_no }], data: [itemData] }];
@@ -119,6 +121,11 @@ export default {
 									}
 								});
 							} else {
+								Object.keys(itemData).forEach(key=>{
+									if(!itemData[key]){
+										delete itemData[key]
+									}
+								})
 								url = self.getServiceUrl(self.appName ? self.appName : 'daq', 'srvdaq_activity_cfg_add', 'add');
 								req = [{ serviceName: 'srvdaq_activity_cfg_add', data: [itemData] }];
 								self.$http.post(url, req).then(response => {
@@ -156,7 +163,13 @@ export default {
 					this.formData = this.activityData;
 					break;
 				case 'add':
-					fields = colVs._fieldInfo;
+					fields = colVs._fieldInfo.map(item=>{
+						if(item.defaultValue){
+							item.value = item.defaultValue
+						}
+						return item
+					});
+					
 					break;
 				case 'detail':
 					fields = this.setFieldsDefaultVal(colVs._fieldInfo, this.activityData);
