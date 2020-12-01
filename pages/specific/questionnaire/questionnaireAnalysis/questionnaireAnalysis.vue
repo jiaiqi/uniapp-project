@@ -14,7 +14,7 @@
         </view>
         <view class="question-analyze" v-if="item.item_type === '选项' && item.itemValue && Object.keys(item.itemValue).length > 0">
           <bx-table :optionData="item.itemValue"></bx-table>
-          <custom-chart :id="item.id" :originData="item.itemValue"></custom-chart>
+          <custom-chart :chartId="item.id" :originData="item.itemValue"></custom-chart>
         </view>
         <view class="nodata" v-if="item.item_type === '选项' && !item.itemValue">本填写有效人次为0</view>
         <view class="question-text" v-if="item.item_type !== '选项'">

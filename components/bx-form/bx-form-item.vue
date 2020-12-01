@@ -336,19 +336,12 @@
 			<view class="cu-dialog rich-text">
 				<bx-editor :field="fieldData" ref="bxEditor" @fieldData-value-changed="editorValueChange"></bx-editor>
 				<view class="dialog-button">
-					<view
-						class="cu-btn bg-grey shadow margin-right"
-						@tap="
-							showRichText = false;
-						"
-					>
-					 取消
-					</view>
+					<view class="cu-btn bg-grey shadow margin-right" @tap="showRichText = false">取消</view>
 					<view
 						class="cu-btn bg-blue shadow"
 						@tap="
 							showRichText = false;
-							saveEditorValue()
+							saveEditorValue();
 						"
 					>
 						确定
@@ -546,7 +539,7 @@ export default {
 		if (this.field.condition && Array.isArray(this.field.condition)) {
 			// this.field.condition.forEach()
 		}
-		if (this.fieldData.type === 'treeSelector') {
+		if (this.fieldData.type === 'treeSelector'&&this.fieldData.display!==false) {
 			this.getTreeSelectorData().then(_ => {
 				let fieldData = this.fieldData;
 				if (fieldData.type === 'treeSelector') {
@@ -684,9 +677,9 @@ export default {
 				console.log('获取选择楼房');
 			}
 		},
-		saveEditorValue(){
-			if(this.fieldData.editValue){
-				this.fieldData.value = this.fieldData.editValue
+		saveEditorValue() {
+			if (this.fieldData.editValue) {
+				this.fieldData.value = this.fieldData.editValue;
 			}
 			this.getValid();
 			this.$emit('on-value-change', this.fieldData.editorData);
@@ -694,7 +687,7 @@ export default {
 		editorValueChange(name, e) {
 			this.fieldData.editValue = e.value;
 			e.column = e.info.name;
-			this.fieldData.editorData = e
+			this.fieldData.editorData = e;
 		},
 		PickerChange(e, itemFile) {
 			let self = this;
@@ -1166,6 +1159,17 @@ export default {
 			if (req.serviceName === 'srvsso_user_select') {
 				req.condition = [{ colName: 'dept_no', ruleType: 'like', value: 'bx100sys' }];
 				appName = 'sso';
+			}
+			if (req.serviceName === 'srvsys_service_columnex_v2_select') {
+				let condServ = '';
+				req.condition.forEach(item => {
+					if (item.colName === 'service_name') {
+						condServ = item.value;
+					}
+				});
+				if (!condServ) {
+					return;
+				}
 			}
 			let res = await self.onRequest('select', req.serviceName, req, appName);
 			if (res.data.state === 'SUCCESS' && res.data.page && res.data.page.total > res.data.page.rownumber * res.data.page.pageNo) {

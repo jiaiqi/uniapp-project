@@ -222,6 +222,10 @@
 			"style": {}
 		},
 		{
+			"path": "pages/fileInfo/fileInfo",
+			"style": {}
+		},
+		{
 			"path": "pages/specific/health/failpage/failpage",
 			"style": {}
 		},
