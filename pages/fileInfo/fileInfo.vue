@@ -39,8 +39,8 @@ export default {
       fileInfo:{},
       fileResList:[],
 	  currentUserInfo:uni.getStorageSync('login_user_info'),
-	  doctor_no:uni.getStorageSync('doctor_no'),
-	  userInfo:uni.getStorageSync('current_patient')
+	  doctor_no:'',
+	  userno:''
     };
   },
   props: {
@@ -50,7 +50,25 @@ export default {
     }
   },
   mixins: [Emitter],
+  onLoad(option) {
+		if(option.doctor_no){
+		  this.doctor_no = option.doctor_no
+		}
+		if(option.userno){
+		 this.userno = option.userno
+		}
+  	console.log("option----->",option)
+  },
   mounted() {
+	  // #ifdef H5
+	  if(this.$route.query.doctor_no){
+		  this.doctor_no = 	this.$route.query.doctor_no
+	  }
+	  if(this.$route.query.userno){
+	   this.userno = this.$route.query.userno
+	  }
+	  // #endif
+	
 	  // this.test()
 	  // if(document.getElementById("text").click){
 	  // }else{
@@ -166,23 +184,34 @@ export default {
 			colNames: ['*'],
 			data:[{
 				sender_account:this.currentUserInfo.user_no,
-				receiver_account:this.doctor_no?this.doctor_no:this.userInfo.userno,
-				msg_content_type:"文件"
+				receiver_account:this.doctor_no?this.doctor_no:this.userno,
+				msg_content_type:"文件",
+				attachment:value
 			}]
 		}];		
-		req[0].data[0].attachment = value		
+		// req[0].data[0].attachment = value		
 		console.log("res========>",req)
 		let res = await this.$http.post(url, req);
 		// if(res.data.state === 'SUCCESS'){
 			
 			console.log("发送成功",res)
 			// this.getMessageInfo()
-			uni.navigateBack({
-				delta:0
-			})
+			// uni.redirectTo({
+			//     url: ''
+			// });
+			setTimeout(()=>{
+				// uni.redirectTo({
+				//     url: ''
+				// });
+				// uni.navigateBack({
+				// 	delta:0
+				// })
+			},1000)
+			
 			
 		// }
 	},
+	
     getFile(file) {
       const fileList = this.fileList;
       let target;
