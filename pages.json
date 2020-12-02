@@ -194,7 +194,7 @@
 		}, {
 			"path": "pages/specific/health/record/record",
 			"style": {}
-		}, 
+		},
 		// {
 		// 	"path": "pages/specific/health/relation/relation",
 		// 	"style": {}
@@ -310,18 +310,26 @@
 			"style": {
 				"navigationBarTitleText": "营养素占比"
 			}
+		}, {
+			"path": "pages/specific/elementDetail/elementDetail",
+			"style": {}
+		}, {
+			"path": "pages/specific/health/shop/shopHome",
+			"style": {
+				"navigationBarTitleText": "商铺首页"
+			}
+		}, {
+			"path": "pages/specific/health/shop/shopDetail",
+			"style": {
+				"navigationBarTitleText": "商铺详情"
+			}
+		}, {
+			"path": "pages/specific/RelationGraph/RelationGraph",
+			"style": {
+				"navigationBarTitleText": "关系图谱"
+			}
 		}
-	    ,{
-            "path" : "pages/specific/elementDetail/elementDetail",
-            "style" : {}
-        },{
-            "path" : "pages/specific/health/shop/shopHome",
-            "style" : {"navigationBarTitleText": "商铺首页"}
-        },{
-            "path" : "pages/specific/health/shop/shopDetail",
-            "style" : {"navigationBarTitleText": "商铺详情"}
-        }
-    ],
+	],
 	"easycom": {
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	},
