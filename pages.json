@@ -329,7 +329,16 @@
 				"navigationBarTitleText": "关系图谱"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/specific/testPage/testPage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"easycom": {
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	},

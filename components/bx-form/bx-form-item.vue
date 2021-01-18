@@ -140,6 +140,7 @@
 					style="min-height: 60px;width: 100%;"
 					:maxlength="fieldData.item_type_attr && fieldData.item_type_attr.max_len ? fieldData.item_type_attr.max_len : 100"
 					@blur="onInputBlur"
+					@focus="onInputfocus"
 					auto-height
 					v-model="fieldData.value"
 					@input="onInputChange"
@@ -419,6 +420,7 @@ export default {
 	name: 'formItem',
 	data() {
 		return {
+			bodyTop: '',
 			showOption_img: false, // 是否显示图片描述
 			defaultLineVal: '',
 			imageIndex: null,
@@ -533,6 +535,7 @@ export default {
 	},
 	mounted() {
 		console.log('procDataprocDataprocData', this.procData);
+		this.bodyTop = document.body.clientHeight;
 		if (this.fieldData.type === 'poupchange') {
 			this.getpoupInfo(this.fieldData.option_list_v2);
 		}
@@ -919,6 +922,8 @@ export default {
 				}, 0);
 			}
 			this.getValid();
+		},
+		onInputfocus() {
 		},
 		onInputBlur() {
 			this.$emit('on-value-blur', this.fieldData);
@@ -1468,6 +1473,8 @@ uni-text.input-icon {
 	padding-top: 50rpx;
 	background-color: #fff;
 	z-index: 199;
+	position: fixed;
+	bottom: 0;
 	.dialog-button {
 		display: flex;
 		justify-content: center;

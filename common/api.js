@@ -25,7 +25,8 @@ let ENV = {
 	frontEndAddress: remoteAddress.frontEndAddress, //前端线上地址
 	appNo: {
 		wxmp: 'APPNO20200214122021', //微信小程序
-		wxh5: 'APPNO20200107181133', //微信公众号
+		// wxh5: 'APPNO20200107181133', //微信公众号
+		wxh5: 'APPNO20200107181133', //万象
 	},
 	appID: {
 		wxmp: 'wx8e6f993081f6e979',
