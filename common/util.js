@@ -17,7 +17,6 @@ export default {
 				uni.setStorageSync(item.key, item.value)
 			})
 		}
-
 		Vue.prototype.$logout = function() {
 			try {
 				uni.clearStorageSync();
@@ -1163,6 +1162,13 @@ export default {
 				})
 			}
 
+		}
+		Vue.prototype.previewImage = (urls)=>{
+			uni.previewImage({
+				urls:[...urls],
+				indicator: "number",
+				loop: "true",
+			})
 		}
 		Vue.prototype.strReplace = function(str, before, after) {
 			console.log(str, before, after)
