@@ -874,21 +874,16 @@ export default {
 		},
 		radioChange(e, index) {
 			if (this.fieldData.type === 'radioFk') {
-				// this.fieldData.value = e.target.value;
-				// this.fieldData.defaultValue = e.target.value;
 				this.$emit('on-value-change', this.fieldData);
 			} else {
 				if (this.fieldData.type === 'checkboxFk') {
-					// let bool = this.fieldData.options[index];
-					// bool.checked = !bool.checked;
-					// this.$set(this.fieldData.options, index, bool);
-					// let arr = this.fieldData.options.filter(item => item.checked).map(item => item.value);
-					// arr = arr.filter(item => item && item);
 					let arr = this.fieldData.value;
 					if (Array.isArray(arr) && arr.indexOf(e.value) === -1) {
 						arr.push(e.value);
-					} else {
+					} else if(arr) {
 						arr.splice(arr.indexOf(e.value), 1);
+					} else {
+						arr = [e.value]
 					}
 					this.fieldData.value = arr;
 				} else if (this.fieldData.type === 'checkbox') {
