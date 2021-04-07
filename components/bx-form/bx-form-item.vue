@@ -15,10 +15,15 @@
 				</view>
 				<u-image width="100%" height="300rpx" :src="getOptionImgExplain(fieldData.option_img_explain)" v-if="showOption_img"></u-image>
 			</block>
-			<view v-if="pageFormType === 'detail'" class="detail-text">
+			<view v-if="pageFormType === 'detail'" class="detail-text" :class="{'row-wrap':fieldData.isMulti}">
 				<text class=" text-xl" v-if="pageFormType === 'detail' && fieldData.type !== 'images' && fieldData.type !== 'snote' && fieldData.type !== 'Note'">
 					{{ dictShowValue ? dictShowValue : treeSelectorShowValue ? treeSelectorShowValue : fieldData.value }}
 				</text>
+				<view class="" v-else-if="pageFormType === 'detail' && fieldData.isMulti">
+					<view class="user-list">
+						<text class="user-item" v-for="item in treeSelectorShowValue">{{item.disp||item||''}}</text>
+					</view>
+				</view>
 				<view class="" v-html="fieldData.value" v-if="pageFormType === 'detail' && (fieldData.type === 'snote' || fieldData.type === 'Note')"></view>
 				<view class="" v-else-if="pageFormType === 'detail' && fieldData.type === 'images'">
 					<image
@@ -147,13 +152,13 @@
 					:disabled="fieldData.disabled ? fieldData.disabled : false"
 					:class="!valid.valid ? 'valid_error' : ''"
 					v-else-if="fieldData.type === 'textarea' && showTextarea"
-					:placeholder="'输入' + fieldData.label"
+					:placeholder="fieldData.placeholder|| `请输入${fieldData.label}`"
 				></textarea>
 				<input
 					@click="showRichText = true"
 					type="text"
 					v-if="(fieldData.type === 'snote' || fieldData.type === 'Note') && !fieldData.disabled"
-					:placeholder="'点击编辑' + fieldData.label"
+					:placeholder="fieldData.placeholder|| `点击编辑${fieldData.label}`"
 					:value="html2text(fieldData.value)"
 					:class="!valid.valid ? 'valid_error' : ''"
 					name="input"
@@ -161,7 +166,7 @@
 				/>
 				<picker class="pickers" @change="PickerChange($event, fieldData)" :value="index" :range="picker" v-if="fieldData.type === 'poupchange'">
 					<!-- <view class="picker">{{ index > -1 ? picker[index] : '请选择' }}</view> -->
-					<input type="text" :placeholder="'点击编辑' + fieldData.label" :value="picker[index]" :class="!valid.valid ? 'valid_error' : ''" name="input" :disabled="true" />
+					<input type="text" :placeholder="fieldData.placeholder|| `点击编辑${fieldData.label}`" :value="picker[index]" :class="!valid.valid ? 'valid_error' : ''" name="input" :disabled="true" />
 				</picker>
 				<view
 					class="content padding-0"
@@ -175,7 +180,7 @@
 						disabled
 						class="date-input"
 						@click.stop="fieldData.disabled ? false : toggleTab(fieldData.type)"
-						:placeholder="'请选择' + fieldData.label"
+						:placeholder="fieldData.placeholder|| `请选择${fieldData.label}`"
 						:class="!valid.valid ? 'valid_error' : ''"
 						style="width: 100%;"
 						name="input"
@@ -237,7 +242,7 @@
 				<input
 					@blur="onInputBlur"
 					type="number"
-					:placeholder="'输入' + fieldData.label"
+					:placeholder="fieldData.placeholder|| `请输入${fieldData.label}`"
 					@input="onInputChange"
 					:max="fieldData.item_type_attr && fieldData.item_type_attr.max ? fieldData.item_type_attr.max : 999"
 					:min="fieldData.item_type_attr && fieldData.item_type_attr.min ? fieldData.item_type_attr.min : 0"
@@ -250,7 +255,7 @@
 				<input
 					@blur="onInputBlur"
 					type="digit"
-					:placeholder="'输入' + fieldData.label"
+					:placeholder="fieldData.placeholder|| `请输入${fieldData.label}`"
 					@input="onInputChange"
 					:disabled="fieldData.disabled ? fieldData.disabled : false"
 					:max="fieldData.item_type_attr && fieldData.item_type_attr.max ? fieldData.item_type_attr.max : 999"
@@ -262,17 +267,27 @@
 				/>
 				<view v-else-if="fieldData.type === 'treeSelector'" @click="openTreeSelector">
 					<!-- <input :placeholder="'点击选择' + fieldData.label" v-model="fieldData.value" disabled :class="!valid.valid ? 'valid_error' : ''" name="input"  /> -->
-					<input :placeholder="'点击选择' + fieldData.label" :value="treeSelectorShowValue" disabled :class="!valid.valid ? 'valid_error' : ''" name="input" />
+					<!-- <input :placeholder="'点击选择' + fieldData.label" :value="treeSelectorShowValue" disabled :class="!valid.valid ? 'valid_error' : ''" name="input" /> -->
+					<view class="treeSelector-input" :class="{'text-blue':!fieldData.value}" v-if="!fieldData.isMulti">
+						{{fieldData.valueForDisplay?fieldData.valueForDisplay:treeSelectorShowValue?treeSelectorShowValue:'点击选择'}}
+					</view>
+					<view class="treeSelector-input" v-else-if="isArray(treeSelectorShowValue)">
+						<text class="user-item" v-for="item in treeSelectorShowValue">{{item.disp||item||''}}</text>
+						<text v-if="treeSelectorShowValue.length===0" class="text-blue">点击选择</text>
+					</view>
+					<view class="treeSelector-input" v-else-if="!treeSelectorShowValue">
+						<text v-if="!treeSelectorShowValue" class="text-blue">点击选择</text>
+					</view>
 				</view>
 				<view v-else-if="fieldData.type === 'cascader'" @click="openCascader">
-					<input :placeholder="'点击选择' + fieldData.label" v-model="fieldData.value" disabled :class="!valid.valid ? 'valid_error' : ''" name="input" />
+					<input :placeholder="fieldData.placeholder|| `点击选择${fieldData.label}`" v-model="fieldData.value" disabled :class="!valid.valid ? 'valid_error' : ''" name="input" />
 				</view>
 				<view class="item-group flex align-center" style="" v-else-if="fieldData.type === 'input'">
 					<input
 						@blur="onInputBlur"
 						:maxlength="fieldData.item_type_attr && fieldData.item_type_attr.max_len ? fieldData.item_type_attr.max_len : 100"
 						:disabled="fieldData.disabled ? fieldData.disabled : false"
-						:placeholder="'输入' + fieldData.label"
+						:placeholder="fieldData.placeholder|| `请输入${fieldData.label}`"
 						v-model="fieldData.value"
 						@input="onInputChange"
 						:class="!valid.valid ? 'valid_error' : ''"
@@ -320,7 +335,7 @@
 					@change="getTreeSelectorDataWithKey"
 					style="margin: 20rpx;"
 				></u-search>
-				<bxTreeSelector
+<!-- 				<bxTreeSelector
 					:srvInfo="isArray(fieldData.option_list_v2) ? null : fieldData.option_list_v2"
 					:treeData="treeSelectorData"
 					:childNodeCol="'_childNode'"
@@ -328,7 +343,14 @@
 					:nodeKey="fieldData.option_list_v2 && fieldData.option_list_v2['refed_col'] ? fieldData.option_list_v2['refed_col'] : 'no'"
 					@clickParentNode="onTreeGridChange"
 					@clickLastNode="onMenu"
-				></bxTreeSelector>
+				></bxTreeSelector> -->
+				<bxTreeSelector :srvInfo="isArray(fieldData.option_list_v2) ? null : fieldData.option_list_v2"
+					:treeData="treeSelectorData" :childNodeCol="'_childNode'" :isMulti="fieldData.isMulti"
+					@multi-change="multiChange"
+					:defaultData="fieldData.value"
+					:disColName="fieldData && fieldData.option_list_v2 && fieldData.option_list_v2['key_disp_col'] ? fieldData.option_list_v2['key_disp_col'] : ''"
+					:nodeKey="fieldData.option_list_v2 && fieldData.option_list_v2['refed_col'] ? fieldData.option_list_v2['refed_col'] : 'no'"
+					@clickParentNode="onTreeGridChange" @clickLastNode="onMenu"></bxTreeSelector>
 				<u-loadmore @loadmore="loadMoreTreeData" :status="treeDataStatus" :load-text="loadText" />
 				<view class="dialog-button"><view class="cu-btn bg-blue shadow" @tap="showTreeSelector = false">取消</view></view>
 			</view>
@@ -421,6 +443,8 @@ export default {
 	data() {
 		return {
 			bodyTop: '',
+			multiSelectData: [],
+			multiSelectValue: [],
 			showOption_img: false, // 是否显示图片描述
 			defaultLineVal: '',
 			imageIndex: null,
@@ -613,6 +637,7 @@ export default {
 		this.getDefVal();
 	},
 	methods: {
+		
 		getOptionImgExplain(e) {
 			if (e) {
 				return this.$api.downloadFile + e + '&bx_auth_ticket=' + uni.getStorageSync('bx_auth_ticket');
@@ -1026,6 +1051,41 @@ export default {
 					this.$emit('get-cascader-val');
 				}
 			}
+		},
+		multiChange(e) {
+			// [{"type":"user","value":"01000002","disp":"康信2/01000002"},{"type":"user","value":"admin","disp":"系统管理员/admin"}]
+			if (Array.isArray(e.data)) {
+				this.multiSelectData = e.data;
+				if (e.data.length > 0 && this.fieldData.option_list_v2.refed_col) {
+					if (e.data[0].hasOwnProperty(`_${this.fieldData.option_list_v2.refed_col}_disp`)) {
+						this.multiSelectValue = e.data.map(item => item[
+							`_${this.fieldData.option_list_v2.refed_col}_disp`])
+					} else {
+						this.multiSelectValue = e.data.map(item =>
+							`${item[this.fieldData.option_list_v2.key_disp_col]}`)
+					}
+				}
+			}
+		},
+		confirmTreeSelector(e) {
+			this.treeSelectorShowValue = this.multiSelectValue
+			const fieldData = this.fieldData
+			let val = this.multiSelectData.map(item => {
+				return {
+					"type": "user",
+					"value": item[fieldData.option_list_v2.refed_col],
+					"disp": item[fieldData.option_list_v2.key_disp_col]
+				}
+			})
+			try {
+				this.fieldData.value = JSON.stringify(val)
+			} catch (e) {
+				//TODO handle the exception
+			}
+			this.showTreeSelector = false;
+			this.onInputBlur();
+			this.$emit('on-value-change', this.fieldData);
+			this.getValid();
 		},
 		onMenu(e) {
 			const data = e.item ? e.item : {};
@@ -1457,6 +1517,10 @@ uni-text.input-icon {
 		margin: 10px 0 0px;
 		line-height: 60rpx;
 		overflow: scroll;
+		&.row-wrap{
+			flex: auto;
+			width: 100%;
+		}
 	}
 }
 .cu-card.article > .cu-item .title {
@@ -1493,4 +1557,28 @@ uni-text.input-icon {
 .uni-popup {
 	z-index: 10000;
 }
+
+	.treeSelector-input {
+		border: 1rpx solid #d0d4d6;
+		padding: 10rpx;
+		min-height: 2.8em;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	.user-item {
+		background-color: #f1f1f1;
+		padding: 2px 5px;
+		border-radius: 5px;
+		margin-bottom: 10rpx;
+		text-align: center;
+		margin-left: 10rpx;
+	}
+	.user-list{
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		white-space: nowrap;
+	}
+
 </style>

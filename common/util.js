@@ -213,6 +213,16 @@ export default {
 					fieldInfo.type = "number"
 				} else if (item.bx_col_type === "fk" && item.col_type !== "User") {
 					fieldInfo.type = "treeSelector"
+				} else if (fieldInfo.col_type === 'UserList') {
+					fieldInfo.isMulti = true
+					fieldInfo.type = "treeSelector"
+					fieldInfo.option_list_v2 = {
+						serviceName: 'srvsso_user_select',
+						srv_app: "sso",
+						refed_col: 'user_no',
+						key_disp_col: 'user_disp',
+						show_as_pair: false,
+					}
 				} else if (item.col_type === "User") {
 					fieldInfo.type = "treeSelector"
 					fieldInfo.option_list_v2 = {
@@ -275,8 +285,9 @@ export default {
 				fieldInfo.disabled = item.updatable === 0 ? true : false, //字段是否冻结
 					fieldInfo._validators = Vue.prototype.getValidators(item.validators, item.validators_message)
 				fieldInfo.isRequire = fieldInfo._validators.required
-				fieldInfo.value = null //初始化ｖａｌｕｅ
-				fieldInfo._colDatas = item //保存原始ｄａｔａ
+				fieldInfo.placeholder = item.placeholder
+				fieldInfo.value = null //初始化value
+				fieldInfo._colDatas = item //保存原始data
 				return fieldInfo
 			})
 			return cols

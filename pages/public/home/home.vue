@@ -1,12 +1,6 @@
 <template>
 	<view class="home">
 		<bxGrid :gridData="appMenu" :disColName="'title'" :nodeKey="'name'" v-if="appMenu.length > 0"></bxGrid>
-		<!-- <view class="" @click="target()">
-			我的
-		</view>
-		<view class="" @click="targets()">
-			商城
-		</view> -->
 	</view>
 </template>
 
@@ -58,8 +52,6 @@
 					}
 				})
 				console.log("appmenu2",this.appMenu)
-				// https://srvms.100xsys.cn/auth/select/srvauth_user_app_menu_select
-				// {"serviceName":"srvauth_user_app_menu_select","colNames":["*"]}
 			}
 		}
 	}
