@@ -21,6 +21,7 @@ import cuCustom from './colorui/components/cu-custom.vue'
 Vue.component('cu-custom', cuCustom)
 import uView from "uview-ui";
 Vue.use(uView);
+Vue.config.ignoredElements.push('wx-open-launch-weapp') 
 // 引入composition-api
 // import VueCompositionAPI from '@vue/composition-api'
 // Vue.use(VueCompositionAPI)

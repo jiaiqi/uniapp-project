@@ -328,12 +328,57 @@
 			"style": {
 				"navigationBarTitleText": "关系图谱"
 			}
+		}, {
+			"path": "pages/specific/testPage/testPage",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/specific/open-weapp/open-weapp",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/specific/queue/queue",
+			"style": {
+				"navigationBarTitleText": "排队信息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/specific/queue/list",
+			"style": {
+				"navigationBarTitleText": "排队列表",
+				"enablePullDownRefresh": true
+			}
 		}
 	    ,{
-            "path" : "pages/specific/testPage/testPage",
+            "path" : "pages/public/scheme/scheme",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/specific/map-echart-demo/map-echart-demo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/specific/foundParty/foundParty",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "建党祝福接力",
                 "enablePullDownRefresh": false
             }
             

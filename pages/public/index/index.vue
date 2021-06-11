@@ -242,7 +242,6 @@ export default {
 					order: [{ colName: 'seq', orderType: 'asc' }]
 				};
 				let ress = await this.$http.post(urls, reqs);
-				debugger
 				if (ress.data.state === 'SUCCESS') {
 					this.categoryList = ress.data.data;
 				}
@@ -252,15 +251,23 @@ export default {
 				let req = {
 					serviceName: serviceName,
 					colNames: ['*'],
-					condition: [{ colName: 'item_no', ruleType: 'in', value: item.item_no }],
+					condition: [{ colName: 'item_no', ruleType: 'eq', value: item.item_no }],
 					order: [{ colName: 'seq', orderType: 'asc' }]
 				};
+				// if(item.div_type==='buttons'){
+				// 	req.condition.push({
+				// 		colName:"display",
+				// 		ruleType:'ne',
+				// 		value:"隐藏"
+				// 	})
+				// }
 				let res = await this.$http.post(url, req);
 				if (res.data.state === 'SUCCESS') {
 					let itemList = res.data.data;
 					itemList.forEach((pageitem, index) => {
 						switch (item.div_type) {
 							case 'buttons':
+								res.data.data = res.data.data.filter(btn=>btn.display!=='隐藏')
 								let itemLists = [];
 								if (itemList.length <= 8) {
 									// itemLists = [[...itemList]];
@@ -276,11 +283,6 @@ export default {
 								pageitem['picUrl'] = this.$api.serverURL + '/file/download?fileNo=' + pageitem.carousel_image;
 								this.$set(itemList, index, pageitem);
 								this.swiperList = itemList;
-								// this.getPictureUrl(pageitem.carousel_image).then(url => {
-								//   pageitem['picUrl'] = url;
-								//   this.$set(itemList, index, pageitem);
-								//   this.swiperList = itemList;
-								// });
 								break;
 							case 'tablist':
 								// this.newsList = itemList;

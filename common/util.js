@@ -1,7 +1,11 @@
 import bus from '@/common/bus.js'
 var jweixin = require('jweixin-module')
+import _http from '@/common/http.js'
+
+import dayjs from '@/static/js/dayjs.min.js'
 export default {
 	install(Vue, options) {
+		Vue.prototype.dayjs = dayjs
 		Vue.prototype.$bus = bus
 		Vue.prototype.$wx = jweixin
 		Vue.prototype.pageTitle = '加载中…' // 可以自定义变量
@@ -48,7 +52,8 @@ export default {
 		 * @param {String} pageType  // use_type 取值
 		 * @param {String} app 
 		 */
-		Vue.prototype.getServiceV2 = async function(srv, srvType, pageType, app) { // 表单信息 srvType : add | update | list | detail | select
+		Vue.prototype.getServiceV2 = async function(srv, srvType, pageType,
+		app) { // 表单信息 srvType : add | update | list | detail | select
 			// use_type: detail | proclist | list | treelist | detaillist | selectlist | addchildlist | updatechildlist | procdetaillist | add | update
 			let self = this
 			let appName = app || uni.getStorageSync("activeApp")
@@ -80,7 +85,8 @@ export default {
 					req.order = [{}]
 					req.order[0]['colName'] = 'seq'
 					req.order[0]['orderType'] = 'asc'
-					let url = Vue.prototype.getServiceUrl(appName, "srvsys_service_columnex_v2_select", "select", url)
+					let url = Vue.prototype.getServiceUrl(appName, "srvsys_service_columnex_v2_select",
+						"select", url)
 					url = url + "?colsel_v2=" + serviceName
 					const response = await this.$http.post(url, req)
 					if (response.data.data) {
@@ -193,14 +199,16 @@ export default {
 					fieldInfo.type = "file"
 					fieldInfo.srvInfo = {
 						tableName: item.table_name,
-						appNo: item.table_name.substring(item.table_name.indexOf("bx") + 2, item.table_name.indexOf("_"))
+						appNo: item.table_name.substring(item.table_name.indexOf("bx") + 2, item
+							.table_name.indexOf("_"))
 					}
 				} else if (item.col_type === "Image") {
 					// } else if (item.col_type === "Image" || item.col_type === "FileList") {
 					fieldInfo.type = "images"
 					fieldInfo.srvInfo = {
 						tableName: item.table_name,
-						appNo: item.table_name.substring(item.table_name.indexOf("bx") + 2, item.table_name.indexOf("_"))
+						appNo: item.table_name.substring(item.table_name.indexOf("bx") + 2, item
+							.table_name.indexOf("_"))
 					}
 				} else if (item.col_type === "Enum" || item.col_type === "Dict") {
 					fieldInfo.type = "radioFk"
@@ -283,7 +291,8 @@ export default {
 				}
 				// 处理字段统一属性
 				fieldInfo.disabled = item.updatable === 0 ? true : false, //字段是否冻结
-					fieldInfo._validators = Vue.prototype.getValidators(item.validators, item.validators_message)
+					fieldInfo._validators = Vue.prototype.getValidators(item.validators, item
+						.validators_message)
 				fieldInfo.isRequire = fieldInfo._validators.required
 				fieldInfo.placeholder = item.placeholder
 				fieldInfo.value = null //初始化value
@@ -303,24 +312,28 @@ export default {
 			cols = cols.filter((item, index) => {
 				switch (pageType) {
 					case "treelist":
-						if ((item.button_type === "addchild" || item.button_type === "edit" || item.button_type === "delete" ||
+						if ((item.button_type === "addchild" || item.button_type === "edit" || item
+								.button_type === "delete" ||
 								item.button_type === "add") && item.permission) {
 							return item
 						}
 						break;
 					case "list":
-						if ((item.button_type === "addchild" || item.button_type === "edit" || item.button_type === "delete" ||
+						if ((item.button_type === "addchild" || item.button_type === "edit" || item
+								.button_type === "delete" ||
 								item.button_type === "add") && item.permission) {
 							return item
 						}
 						break;
 					case "add":
-						if ((item.button_type === "reset" || item.button_type === "submit") && item.permission) {
+						if ((item.button_type === "reset" || item.button_type === "submit") && item
+							.permission) {
 							return item
 						}
 						break;
 					case "update":
-						if ((item.button_type === "reset" || item.button_type === "edit") && item.permission) {
+						if ((item.button_type === "reset" || item.button_type === "edit") && item
+							.permission) {
 							return item
 						}
 						break;
@@ -406,7 +419,81 @@ export default {
 			let url = Vue.prototype.getServiceUrl(app || uni.getStorageSync("activeApp"), srv, optionType)
 			return self.$http.post(url, req)
 		}
+		Vue.prototype.$fetch = async function(optionType, srv, req, app) {
+			if (!req.colNames) {
+				req.colNames = ['*']
+			}
+			if (!req.serviceName) {
+				req.serviceName = srv
+			}
+			if (!req.page) {
+				req.page = {
+					pageNo: 1,
+					rownumber: 10
+				}
+			}
+			let reqType = optionType
+			if (optionType === "add" || optionType === "update") {
+				reqType = optionType
+			} else if (optionType === "select") {
 
+			}
+			let url = Vue.prototype.getServiceUrl(app || uni.getStorageSync("activeApp"), srv, optionType)
+			let res = await _http.post(url, req)
+			if (res.data.state === 'SUCCESS') {
+				// select
+				if (optionType === "select") {
+					return {
+						success: true,
+						page: res.data.page,
+						data: res.data.data
+					}
+				} else if (optionType === "multi") {
+					if (Array.isArray(res.data.data)) {
+						return {
+							success: true,
+							data: res.data.data
+						}
+					}
+				} else {
+					// update|add|delete
+					if (
+						Array.isArray(res.data.response) &&
+						res.data.response.length > 0 &&
+						res.data.response[0].response &&
+						Array.isArray(res.data.response[0].response.effect_data) &&
+						res.data.response[0].response.effect_data.length > 0
+					) {
+						return {
+							success: true,
+							data: res.data.response[0].response.effect_data
+						}
+					} else if (Array.isArray(res.data.response) &&
+						res.data.response.length > 0 &&
+						res.data.response[0].response) {
+						return {
+							success: true,
+							data: res.data.response[0].response
+						}
+					}
+				}
+			} else {
+				let result = {
+					success: false,
+					state: res.data.state,
+				}
+				if (res.data.resultCode) {
+					result.code = res.data.resultCode
+				}
+				if (res.data.resultMessage) {
+					result.msg = res.data.resultMessage
+				}
+				if (res.data.serviceInfo) {
+					result.info = res.data.serviceInfo
+				}
+				return result
+			}
+		}
 		// -------------------公共方法-------------------------------
 		/**
 		 * @param {String} app 
@@ -464,9 +551,11 @@ export default {
 					}
 					let Validators = {}
 					let reg = /required/gi
-					Validators['max'] = getStr(str, 'ngMaxlength=', ';').length > 0 ? parseInt(getStr(str, 'ngMaxlength=', ';')) :
+					Validators['max'] = getStr(str, 'ngMaxlength=', ';').length > 0 ? parseInt(getStr(str,
+							'ngMaxlength=', ';')) :
 						null
-					Validators['min'] = getStr(str, 'ngMinlength=', ';').length > 0 ? parseInt(getStr(str, 'ngMinlength=', ';')) :
+					Validators['min'] = getStr(str, 'ngMinlength=', ';').length > 0 ? parseInt(getStr(str,
+							'ngMinlength=', ';')) :
 						null
 					Validators['reg'] = getStr(str, 'ngPattern=', ';')
 					Validators['required'] = reg.test(str)
@@ -508,7 +597,8 @@ export default {
 				throw new Error('非对象')
 			}
 			let isArray = Array.isArray(obj)
-			let newObj = isArray ? [...obj] : { ...obj
+			let newObj = isArray ? [...obj] : {
+				...obj
 			}
 			Reflect.ownKeys(newObj).forEach(key => {
 				newObj[key] = isObject(obj[key]) ? Vue.prototype.deepClone(obj[key]) : obj[key]
@@ -524,7 +614,7 @@ export default {
 			});
 		}
 
-		Vue.prototype.formateDate = function(date, type = 'date') {
+		Vue.prototype.formateDate = function(date = null, type = 'date') {
 			console.log(date)
 			date = new Date(date)
 			let o = {
@@ -1031,7 +1121,8 @@ export default {
 											"colNames": ["*"],
 											"condition": params.condition
 										}]
-										Vue.prototype.onRequest("delete", params.serviceName, req).then((res) => {
+										Vue.prototype.onRequest("delete", params.serviceName,
+											req).then((res) => {
 											if (res.data.state === "SUCCESS") {
 
 												resolve(res.data)
@@ -1174,9 +1265,9 @@ export default {
 			}
 
 		}
-		Vue.prototype.previewImage = (urls)=>{
+		Vue.prototype.previewImage = (urls) => {
 			uni.previewImage({
-				urls:[...urls],
+				urls: [...urls],
 				indicator: "number",
 				loop: "true",
 			})
@@ -1191,8 +1282,9 @@ export default {
 			}
 		}
 		Vue.prototype.html2text = (str) => {
-			return str.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(
-				/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ')
+			return str.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '')
+				.replace(
+					/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ')
 		}
 	}
 }

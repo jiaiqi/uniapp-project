@@ -3,12 +3,12 @@
 let remoteAddress = {
 	ssourl: 'http://www.100xsys.cn', // 微信登陆sso 端口
 	ssoAddress: 'http://sso.100xsys.cn',
-	serviceAddress: 'http://192.168.0.155:8106', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
-	// serviceAddress: 'https://srvms.100xsys.cn', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
+	// serviceAddress: 'http://192.168.0.155:8106', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
+	serviceAddress: 'https://srvms.100xsys.cn', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
 	// serviceAddress: 'http://192.168.0.121:8101', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
 	// serviceAddress: 'https://srvms.100xsys.cn', // http://login.100xsys.cn 接口地址srvms.100xsys.cn
-	frontEndAddress: 'https://192.168.0.155/wxpage',
-	// frontEndAddress: 'https://wx2.100xsys.cn',
+	// frontEndAddress: 'https://192.168.0.155/wxpage',
+	frontEndAddress: 'https://wx2.100xsys.cn',
 	singleApp:false, // 是否单应用， true 时 所有请求均使用 appName 配置
 	appName:"daq", //singleApp 为 true 时 必须配置
 	bx_auth_ticket: "e2cc16a3-6a87-42da-ae5f-99a6af84c5f8",
@@ -31,7 +31,7 @@ let ENV = {
 	},
 	appID: {
 		wxmp: 'wx8e6f993081f6e979',
-		wxh5: ''
+		wxh5: 'wx78d1d4139f97ffca' //百想助理
 	},
 	isThirdParty:remoteAddress.isThirdParty,
 	homePath:remoteAddress.homePath, // 应用业务的入口页面 首页。
