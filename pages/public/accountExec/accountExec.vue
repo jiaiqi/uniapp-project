@@ -111,9 +111,11 @@ export default {
 	},
 	onLoad(option) {
 		let self = this;
+		
 		uni.showLoading({
 			title: '请稍后'
 		});
+		
 		if (uni.getStorageSync('isLogin')) {
 			console.log('已登录，不进行初始化授权', uni.getStorageSync('isLogin'));
 			if (uni.getStorageSync('backUrl') && uni.getStorageSync('backUrl') !== '/') {
@@ -131,6 +133,7 @@ export default {
 			if (uni.getStorageSync('isThirdParty')) {
 			}
 		}
+
 		if (navigator.userAgent.indexOf('iPhone') !== -1) {
 			let linkUrl = window.location + '';
 			uni.setStorageSync('linkUrl', linkUrl);

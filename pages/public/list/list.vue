@@ -118,32 +118,6 @@ export default {
 		if (option.hasOwnProperty('showAdd')) {
 			this.queryOption = option;
 		}
-		if (query.serviceName == 'srvzhxq_clgl_select') {
-			let users = null;
-			this.getUserInfo().then(u => {
-				console.log('u------', u);
-				users = u;
-				let cond = [
-					{
-						colName: 'lybm',
-						ruleType: 'eq',
-						value: u.lybm
-					},
-					{
-						colName: 'dybm',
-						ruleType: 'eq',
-						value: u.dybm
-					},
-					{
-						colName: 'fwbm',
-						ruleType: 'eq',
-						value: u.fwbm
-					}
-				];
-				this.condition = [...this.condition, ...cond];
-				console.log('users=====', this.condition);
-			});
-		}
 		if (query.viewTemp) {
 			// let viewTemp = this.getDecodeUrl(option.viewTemp);
 			this.viewTemp = JSON.parse(query.viewTemp);
@@ -330,6 +304,7 @@ export default {
 			console.log('listChange:', e);
 		},
 		clickItem(e) {
+			debugger
 			if (this.pageType === 'proc') {
 				uni.navigateTo({
 					url: '/pages/public/proc/procDetail/procDetail?proc_instance_no=' + e.proc_instance_no
@@ -658,29 +633,7 @@ export default {
 	},
 
 	onShareAppMessage(res) {
-		if (res.target.dataset.info.button_type === 'applyProc' && res.target.dataset.info.button_name === '邀请' && res.target.dataset.procno) {
-			return {
-				title: '绑定住户邀请',
-				path: '/pages/specific/shareBind/shareBind?proc_instance_no=' + res.target.dataset.procno
-			};
-		} else if (
-			res.target.dataset.info.button_type === 'customize' &&
-			(res.target.dataset.info.button_name == '邀请绑定' ||
-				res.target.dataset.info.button_name == '重新绑定' ||
-				res.target.dataset.info.button_name == '邀请绑定账号' ||
-				res.target.dataset.info.button_name == '重新绑定账号') &&
-			res.target.dataset.id
-		) {
-			return {
-				title: '绑定住户邀请',
-				path: '/pages/specific/shareBind/shareBind?dataid=' + res.target.dataset.id + '&serviceName=srvzhxq_member_update'
-			};
-		} else {
-			return {
-				title: '分享测试',
-				path: '/pages/public/proc/procDetail/procDetail?proc_instance_no=' + res.target.dataset.procno
-			};
-		}
+
 	},
 	onShareTimeline(res) {
 		console.log(res);

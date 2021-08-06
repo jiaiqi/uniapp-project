@@ -19,7 +19,6 @@
 			<view class="content" style="padding: 0 30upx;">
 				<view class="desc">
 					<view class="text-content-text"><view v-html="JSON.parse(JSON.stringify(formData.end_remark).replace(/\<img/gi, '<img width=100%'))"></view></view>
-					<!-- <view class="text-content">{{ formData.end_remark }}</view> -->
 				</view>
 			</view>
 			<view
@@ -29,9 +28,6 @@
 			>
 				<button class="button bg-blue line-white" type="" @click="submitForm()">提交</button>
 			</view>
-			<!-- 			<view class="button-box" style="margin: 30upx;" v-if="formType === 'form' && configCols && configCols.length > 0 && formData['answer_times']==='多次'&& formData['user_state'] !== '未完成'">
-				<button class="bg-blue line-white" type="" @click="submitForm()">提交</button>
-			</view> -->
 			<view
 				class="button-box"
 				style="margin: 30upx;"
@@ -88,18 +84,6 @@
 			</view>
 		</view>
 	</view>
-
-	<!-- </view> -->
-	<!-- <view class="question-wrap">
-    <view class="question-title">{{ formData.title }}</view>
-    <view class="question-remark">{{ formData.remark }}</view>
-    <view class="question-content">
-      <view class="form-wrap"><bxform ref="bxform" :fields="configCols" :BxformType="'form'" @value-blur="saveValue"></bxform></view>
-    </view>
-    <view class="button-box" v-if="formType === 'form'"><button type="primary" @click="submitForm('submit')">提交</button></view>
-
-    <view class="question-endremark">{{ formData.end_remark }}</view>
-  </view> -->
 </template>
 
 <script>
