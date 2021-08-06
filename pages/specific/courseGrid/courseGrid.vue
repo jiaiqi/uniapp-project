@@ -464,7 +464,7 @@
 
 					// rowHeadList = await this.getRowHead()
 
-
+					debugger
 					rowHeadList.forEach((row, rowIndex) => {
 						row['rowDataList'] = [];
 						row['newRowDataList'] = [];
@@ -638,10 +638,10 @@
 				}
 				const res = await this.$http.post(url, req);
 				if (res.data.state === 'SUCCESS') {
-					let list = res.data.data.map(item => item[scheduleConfig.col_head_disp_col]);
-					list = [...new Set(list)];
+					// let list = res.data.data.map(item => item[scheduleConfig.col_head_disp_col]);
+					// list = [...new Set(list)];
 					// this.rowHeadList = res.data.data;
-					return list;
+					return res.data.data;
 					// return this.rowHeadList;
 				}
 			},
